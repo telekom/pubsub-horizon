@@ -17,35 +17,35 @@ Overall, Horizon simplifies the development of event-driven architectures by pro
 
 ## Horizon ecosystem
 ### Java
-- [Horizon Spring Parent](/dhei/teams/pandora/libraries/horizon-spring-parent): Contains basic configuration, functionality and models used by all Horizon java components.
-- [Galaxy](/telekom/pubsub-horizon-galaxy): Responsible for efficient event message multiplexing, managing the flow of events, handling duplicates, and transforming events based on defined response filters.
-- [Comet](/telekom/pubsub-horizon-comet): Manages the delivery of events to subscribers by handling subscription requests, validating subscriptions, and ensuring timely delivery of events to subscribers.
-- [Polaris](/telekom/pubsub-horizon-polaris): Monitors the health of subscriber endpoints by periodically sending health check requests, handling endpoint changes, and managing event redelivery based on endpoint status changes.
-- [Pulsar](/telekom/pubsub-horizon-pulsar): Provides event logging and auditing functionalities, including event storage, retrieval, and analysis, to track event processing and troubleshoot issues.
-- [Starlight](/telekom/pubsub-horizon-starlight): Offers event monitoring and alerting capabilities by detecting anomalies, monitoring system health, and sending alerts to system administrators or operators when predefined thresholds are exceeded.
-- [JSON Filter](/telekom/pubsub-horizon-libs/json-filter): Allows to filter JSON objects based on a given filter expression.
+- [Horizon Spring Parent](https://github.com/telekom/pubsub-horizon-spring-parent): Contains basic configuration, functionality and models used by all Horizon java components.
+- [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy): Responsible for efficient event message multiplexing, managing the flow of events, handling duplicates, and transforming events based on defined response filters.
+- [Comet](https://github.com/telekom/pubsub-horizon-comet): Manages the delivery of events to subscribers by handling subscription requests, validating subscriptions, and ensuring timely delivery of events to subscribers.
+- [Polaris](https://github.com/telekom/pubsub-horizon-polaris): Monitors the health of subscriber endpoints by periodically sending health check requests, handling endpoint changes, and managing event redelivery based on endpoint status changes.
+- [Pulsar](https://github.com/telekom/pubsub-horizon-pulsar): Provides event logging and auditing functionalities, including event storage, retrieval, and analysis, to track event processing and troubleshoot issues.
+- [Starlight](https://github.com/telekom/pubsub-horizon-starlight): Offers event monitoring and alerting capabilities by detecting anomalies, monitoring system health, and sending alerts to system administrators or operators when predefined thresholds are exceeded.
+- [JSON Filter](https://github.com/telekom/JSON-Filter): Allows to filter JSON objects based on a given filter expression.
 ### Go
-- [Voyager](/telekom/pubsub-horizon-voyager): Facilitates event redelivery for failed events by managing event retry policies, maintaining event delivery state, and coordinating event redelivery attempts with subscribers.
-- [Vortex](/telekom/pubsub-horizon-vortex): Ensure state-fullness by saving all event messages and status updates in the database, excluding the payload.
-- [Eventhorizon BFF](/dhei/teams/pandora/products/eventhorizon/eventhorizon-bff): Provides REST endpoints for the Eventhorizon frontend to access the Horizon ecosystems data like subscription, exposures and event information.
-- [Janus](/dhei/teams/pandora/utils/janus): Provides REST endpoints for the Janus frontend to check customer endpoints for a valid GET/HEAD response.
+- [Voyager](https://github.com/telekom/pubsub-horizon-voyager): Facilitates event redelivery for failed events by managing event retry policies, maintaining event delivery state, and coordinating event redelivery attempts with subscribers.
+- [Vortex](https://github.com/telekom/pubsub-horizon-vortex): Ensure state-fullness by saving all event messages and status updates in the database, excluding the payload.
+- [Eventhorizon BFF](https://github.com/telekom/pubsub-horizon-eventhorizon-bff): Provides REST endpoints for the Eventhorizon frontend to access the Horizon ecosystems data like subscription, exposures and event information.
+- [Janus](https://github.com/telekom/pubsub-horizon-janus): Provides REST endpoints for the Janus frontend to check customer endpoints for a valid GET/HEAD response.
 ### Javascript
-- [Eventhorizon](/dhei/teams/pandora/products/eventhorizon/eventhorizon): User interface for the Horizon ecosystem, including event information and Circuit-Breaker information.
-- [Janus UI](/dhei/teams/pandora/utils/janus-ui): User interface to check customer endpoints for a valid GET/HEAD response.
+- [Eventhorizon](https://github.com/telekom/pubsub-horizon-eventhorizon): User interface for the Horizon ecosystem, including event information and Circuit-Breaker information.
+- [Janus UI](https://github.com/telekom/pubsub-horizon-janus-ui): User interface to check customer endpoints for a valid GET/HEAD response.
 
 ## Architecture
 The diagram below shows the general flow and access points of the most important components of Horizon.
 # ![Architecture](./docs/imgs/Horizon-Architecture-Simple.webp)
-Customer endpoints are [Starlight](/telekom/pubsub-horizon-galaxy-starlight), 
-[Pulsar](/telekom/pubsub-horizon-galaxy-pulsar)
+Customer endpoints are [Starlight](https://github.com/telekom/pubsub-horizon-galaxy-starlight), 
+[Pulsar](https://github.com/telekom/pubsub-horizon-galaxy-pulsar)
 and 
-[Voyager](/telekom/pubsub-horizon-galaxy-voyager). 
+[Voyager](https://github.com/telekom/pubsub-horizon-galaxy-voyager). 
 Every communication between the components run over Kafka. 
 The Vortex component ensures state-fullness by saving all event messages and status updates in the mongodb, excluding the payload.
 
 
-To publish an event, an eligible publisher has to send a HTTP Post request to Starlights endpoint. Starlight will validate and publish the event message to [Galaxy](/telekom/pubsub-horizon-galaxy-galaxy).
-Galaxy will multiplex the event message for each subscriber and send it to the [Comet](/telekom/pubsub-horizon-galaxy-comet).
+To publish an event, an eligible publisher has to send a HTTP Post request to Starlights endpoint. Starlight will validate and publish the event message to [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy-galaxy).
+Galaxy will multiplex the event message for each subscriber and send it to the [Comet](https://github.com/telekom/pubsub-horizon-galaxy-comet).
 Comet will send the event message to the subscriber over HTTP. 
 
 To receive an event, an eligible subscriber has to send a SSE request to Pulsars endpoint. 
@@ -59,10 +59,10 @@ If you are interested in a more detailed system architecture, click [here](./doc
 ## Models
 This repository contains models that are crucial for the communication between the Horizon components. 
 <br>These models are:
-- [Subscription](./horizon-spring/src/main/java/de/telekom/eni/pandora/horizon/kubernetes/resource/Subscription.java): Represents a subscription of a subscriber to a specific event type. This subscription is used to filter and deliver event messages to the subscriber.
-- [PublishedEventMessage](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/PublishedEventMessage.java): Represents an event message that is published by a publisher.
-- [SubscriptionEventMessage](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/SubscriptionEventMessage.java): Represents an event message that is multiplexed from a [PublishedEventMessage](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/PublishedEventMessage.java) by Galaxy for each subscriber.
-- [Status](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/Status.java): Represents the status of a [SubscriptionEventMessage](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/SubscriptionEventMessage.java).
+- [Subscription](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-spring/src/main/java/de/telekom/eni/pandora/horizon/kubernetes/resource/Subscription.java): Represents a subscription of a subscriber to a specific event type. This subscription is used to filter and deliver event messages to the subscriber.
+- [PublishedEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/PublishedEventMessage.java): Represents an event message that is published by a publisher.
+- [SubscriptionEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/SubscriptionEventMessage.java): Represents an event message that is multiplexed from a [PublishedEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/PublishedEventMessage.java) by Galaxy for each subscriber.
+- [Status](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/Status.java): Represents the status of a [SubscriptionEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/SubscriptionEventMessage.java).
    <details>
      <summary>Status flow of a SubscriptionEventMessage</summary>
 
@@ -77,7 +77,7 @@ This repository contains models that are crucial for the communication between t
          PROCESSED-->WAITING;
      ```
   </details>
-- [State](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/db/State.java): Represents the state of a event message in the database. Contains timestamps, kafka location information, filter results, errors, the status and additional metadata like tracing etc.
+- [State](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/db/State.java): Represents the state of a event message in the database. Contains timestamps, kafka location information, filter results, errors, the status and additional metadata like tracing etc.
   <details>
     <summary>Example</summary>
   
@@ -123,7 +123,7 @@ This repository contains models that are crucial for the communication between t
     }
     ```
   </details>
-- [CircuitBreakerMessage](./horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/meta/CircuitBreakerMessage.java): Represents a circuit breaker message that is opened by the Comet on unsuccessful event message delivery to a subscriber, with a retryable error code. Contains information about the subscriber and subscription, the last health check results, the assigned pod, the status of the circuit breaker message (OPEN, CHECKING, REPUBLISHING). 
+- [CircuitBreakerMessage](https://github.com/telekom/pubsub-horizon-spring-parent/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/meta/CircuitBreakerMessage.java): Represents a circuit breaker message that is opened by the Comet on unsuccessful event message delivery to a subscriber, with a retryable error code. Contains information about the subscriber and subscription, the last health check results, the assigned pod, the status of the circuit breaker message (OPEN, CHECKING, REPUBLISHING). 
   One circuit breaker message is created for each subscription, therefore one circuit breaker message exists for multiple event messages.
   <details>
     <summary>Circuit breaker status flow</summary>
