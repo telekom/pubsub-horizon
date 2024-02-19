@@ -20,9 +20,9 @@ Overall, Horizon simplifies the development of event-driven architectures by pro
 - [Horizon Spring Parent](https://github.com/telekom/pubsub-horizon-spring-parent): Contains basic configuration, functionality and models used by all Horizon java components.
 - [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy): Responsible for efficient event message multiplexing, managing the flow of events, handling duplicates, and transforming events based on defined response filters.
 - [Comet](https://github.com/telekom/pubsub-horizon-comet): Manages the delivery of events to subscribers by handling subscription requests, validating subscriptions, and ensuring timely delivery of events to subscribers.
-- [Polaris](https://github.com/telekom/pubsub-horizon-polaris): Monitors the health of subscriber endpoints by periodically sending health check requests, handling endpoint changes, and managing event redelivery based on endpoint status changes.
-- [Pulsar](https://github.com/telekom/pubsub-horizon-pulsar): Provides event logging and auditing functionalities, including event storage, retrieval, and analysis, to track event processing and troubleshoot issues.
-- [Starlight](https://github.com/telekom/pubsub-horizon-starlight): Offers event monitoring and alerting capabilities by detecting anomalies, monitoring system health, and sending alerts to system administrators or operators when predefined thresholds are exceeded.
+- [Polaris](https://github.com/telekom/pubsub-horizon-polaris): Ensures fallback safety for different issues. Periodically checks consumer endpoints to redeliver unsuccessful events.
+- [Pulsar](https://github.com/telekom/pubsub-horizon-pulsar): Enables the retrieval of events with the Server-Sent Event Protocol for events with the delivery type SSE.
+- [Starlight](https://github.com/telekom/pubsub-horizon-starlight): Offers an event publishing endpoint to publicate events.
 - [JSON Filter](https://github.com/telekom/JSON-Filter): Allows to filter JSON objects based on a given filter expression.
 ### Go
 - [Voyager](https://github.com/telekom/pubsub-horizon-voyager): Facilitates event redelivery for failed events by managing event retry policies, maintaining event delivery state, and coordinating event redelivery attempts with subscribers.
