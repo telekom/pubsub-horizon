@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2024 Deutsche Telekom AG
+
+SPDX-License-Identifier: CC0-1.0    
+-->
+
 # Horizon
 
 A cloud intermediary which handles the asynchronous communication between systems through well defined messages ('events).
