@@ -6,7 +6,7 @@ SPDX-License-Identifier: CC0-1.0
 
 # Horizon
 
-A cloud intermediary which handles the asynchronous communication between systems through well defined messages ('events).
+A cloud intermediary which handles the asynchronous communication between systems through well-defined messages ('events).
 
 ## About
 
@@ -30,12 +30,12 @@ Key features of Horizon include:
 
 <details>
 <summary><strong>RESTful design</strong></summary>  
-Horizon allows event providers to publish events by simply calling an API. There is no need to deal with a specific message broker technology and study all the technical details . Receiving events is similarly simple, either by providing an HTTP endpoint for callback requests or by calling a different API. The existing interfaces make it very easy to integrate Horizon with a wide range of applications as the only capability required is to be able to make an HTTP request or receive one.
+Horizon allows event providers to publish events by simply calling an API. There is no need to deal with a specific message broker technology and study all the technical details. Receiving events is similarly simple, either by providing an HTTP endpoint for callback requests or by calling a different API. The existing interfaces make it very easy to integrate Horizon with a wide range of applications as the only capability required is to be able to make an HTTP request or receive one.
 </details>
 <br />
 <details>
 <summary><strong>Powerful message filtering</strong></summary>  
-Horizon's message filtering capabilities are an hybrid of topic-based and contend-based. Published events are processed and delivered to consumers based on the subscriptions to the corresponding event types. Optionally, consumers can declare simple or more complex fltering rules for customizing what data or parts of the data should be delivered to them based on the contents of the event message.   
+Horizon's message filtering capabilities are a hybrid of topic-based and contend-based. Published events are processed and delivered to consumers based on the subscriptions to the corresponding event types. Optionally, consumers can declare simple or more complex filtering rules for customizing what data or parts of the data should be delivered to them based on the contents of the event message.   
 In addition, event providers can define scopes for their data for fine-grained control over what subscribers are allowed to see. 
 </details>
 <br />
@@ -66,7 +66,7 @@ Horizon's runtime consists of 6 microservices, mainly written in Java (SpringBoo
 - [Horizon Comet](https://github.com/telekom/pubsub-horizon-comet) (Java): Handles the timely delivery of events to consumers with provided callback endpoint and takes care of retries in case of consumer unavailability.
 - [Horizon Pulsar](https://github.com/telekom/pubsub-horizon-pulsar) (Java): Enables the retrieval of events via Server-Sent Event (SSE) technology by offering a corresponding API endpoint.
 - [Horizon Polaris](https://github.com/telekom/pubsub-horizon-polaris) (Java): Ensures fallback safety for various issues that could happen at runtime. Periodically checks the availability of consumer endpoints to redeliver unsuccessful events.
-- [Horizon Vortex](https://github.com/telekom/pubsub-horizon-vortex) (Go): Ensure state-fulness by saving all event messages and status updates in the database, excluding the payload.
+- [Horizon Vortex](https://github.com/telekom/pubsub-horizon-vortex) (Go): Responsible for event sourcing. Derives a status entry from published event messages in addition to other meta information and stores these in the MongoDB database.
 
 ### Libraries
 - [Horizon Spring Parent](https://github.com/telekom/pubsub-horizon-spring-parent) (Java): Horizon's parent library which contains basic configuration, functionality and models used by all Horizon Java components.
@@ -93,25 +93,25 @@ Horizon requires the following infrastructure components in order to operate cor
 **Note, that these optional components are not required in order to deploy and operate Horizon and their source code is currently not publicly available. Depending on our capacity we will be probably working on their open source release among other tools/helpers that might be useful when operating Horizon.*
 
 ## Architecture
-The diagram below shows the general flow and access points of the most important components of Horizon.
+The diagram below shows the general flow and interfaces between the most important components of Horizon.
 # ![Architecture](./docs/imgs/Horizon-Architecture-Simple.webp)
 Customer endpoints are provided by [Starlight](https://github.com/telekom/pubsub-horizon-galaxy-starlight), 
 [Pulsar](https://github.com/telekom/pubsub-horizon-galaxy-pulsar)
 and 
 Voyager. 
-Every communication between the components run over Kafka. 
-The Vortex component ensures state-fullness by saving all event messages and status updates in the mongodb, excluding the payload.
+Since Horizon itself is an event-driven system, all components communicate with each other by writing and reading messages in and from Kafka. 
+The Vortex component ensures that for every message store in the broker a corresponding status entry with meta data information is tracked in MongoDB.
 
+### Workflow
 
-To publish an event, an eligible publisher has to send a HTTP Post request to Starlights endpoint. Starlight will validate and publish the event message to [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy-galaxy).
-Galaxy will multiplex the event message for each subscriber and send it to the [Comet](https://github.com/telekom/pubsub-horizon-galaxy-comet).
-Comet will send the event message to the subscriber over HTTP. 
+To publish an event, an eligible publisher has to send a HTTP Post request to Starlight's endpoint. Starlight will validate and publish the event message to the underlying message broker whereupon it will be read and processed by [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy-galaxy).
+Galaxy will de-multiplex the event message for each subscriber and applies existing filters. [Comet](https://github.com/telekom/pubsub-horizon-galaxy-comet) then takes over and sends the processed event message to the corresponding subscriber over HTTP. 
 
-To receive an event, an eligible subscriber has to send a SSE request to Pulsars endpoint. 
-Pulsar will validate the request, spot & pick all undelivered event messages from the kafka and return it to the susbscriber.
+To fetch an event via the Server-Sent-Events standard (SSE), an eligible subscriber has to send a request to Pulsar's SSE endpoint. 
+Pulsar will validate the request, spot & pick all undelivered event messages from Kafka and return it to the subscriber.
 If one or more new events are available within one minute, Pulsar will forward these event messages to the subscriber until there are no more event messages for one minute.
 
-To query or redeliver an event, an eligible subscriber has to send a HTTP request to Voyagers endpoint. A redelivery spots & picks the event message from the kafka, resets its status and republish them to the Comet.
+In order to query the status for an event or redeliver it, an eligible subscriber has to send a HTTP request to Voyager's endpoint. When requesting the redelivery of an event, Voyager picks the event message from the Kafka, resets its status in Horizon meta data store (MongoDB) and republishes it, so that either Comet or Pulsar will redeliver the event to the consumer depending on the chosen delivery type (callback or SSE).
 
 If you are interested in a more detailed system architecture, click [here](./docs/architecture.md).
 
@@ -135,7 +135,7 @@ Horizon internally uses a model that is crucial for the communication between th
          PROCESSED-->WAITING;
      ```
   </details>
-- [State](https://github.com/telekom/pubsub-horizon-spring-parent/blob/main/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/db/State.java): Represents the state of a event message in the database. Contains timestamps, kafka location information, filter results, errors, the status and additional metadata like tracing etc.
+- [State](https://github.com/telekom/pubsub-horizon-spring-parent/blob/main/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/db/State.java): Represents the state of an event message in the database. Contains timestamps, Kafka location information, filter results, errors, the status and additional metadata like tracing etc.
   <details>
     <summary>Example</summary>
   
@@ -145,7 +145,7 @@ Horizon internally uses a model that is crucial for the communication between th
       "event": {
         "id": "ede6cd87-14d2-4058-8186-f7937bbbdae7",
         "time": "2023-10-24T11:00:36.531Z",
-        "type": "some.event.type.v1",
+        "type": "ecommerce.shop.orders.v1",
         "_id": "ede6cd87-14d2-4058-8186-f7937bbbdae7"
       },
       "coordinates": {
@@ -166,12 +166,12 @@ Horizon internally uses a model that is crucial for the communication between th
         "X-B3-Sampled": "1",
         "X-B3-SpanId": "c2a630bd02af829a",
         "X-B3-TraceId": "246db1ad668a55b269929ee9e1d1747f",
-        "callback-url": "https://stargate-playground.live.dhei.telekom.de/horizon-aws/callback/v1?url=https://mapigw.dev.oc.telekom.net/api/v1.0/mavi-ingests",
+        "callback-url": "https://billing-service.example.com/api/v1/callback",
         "selectionFilterResult": "NO_FILTER",
-        "subscriber-id": "mpathic--mpathic--mpathic-mavi-dev-3"
+        "subscriber-id": "ecommerce--billing--order-event-consumer"
       },
       "status": "WAITING",
-      "subscriptionId": "5fc7b4b9c10bbe2267d7e5876ca6b9ba0f665687",
+      "subscriptionId": "4ca708e09edfb9745b1c9ceeb070aacde42cf04f",
       "timestamp": {
         "$date": {
           "$numberLong": "1707984041704"
@@ -200,11 +200,11 @@ Horizon internally uses a model that is crucial for the communication between th
     ```json
     {
         "key": "fa011ae1dfdf1313de81ce9a4689da0dc3f744c9",
-        "subscriptionId": "fa011ae1dfdf1313de81ce9a4689da0dc3f744c9",
-        "subscriberId": "",
+        "subscriptionId": "4ca708e09edfb9745b1c9ceeb070aacde42cf04f",
+        "subscriberId": "ecommerce--billing--order-event-consumer",
         "status": "CHECKING",
         "environment": "playground",
-        "callbackUrl": "https://some-callback-url.com/our-endpoint-1",
+        "callbackUrl": "https://billing-service.example.com/api/v1/callback",
         "timestamp": "2023-10-12T06:17:32.533+00:00",
         "lastHealthCheck": {
         "firstCheckedDate": "2024-02-15T07:12:27.823+00:00",
@@ -212,7 +212,7 @@ Horizon internally uses a model that is crucial for the communication between th
         "returnCode": 503,
         "reasonPhrase": "Service Unavailable"
         },
-        "assignedPodId": "horizon3-plunger-74f964b969-j4264"
+        "assignedPodId": "horizon-polaris-74f964b969-j4264"
     }
     ```
   </details>
@@ -221,122 +221,16 @@ Horizon internally uses a model that is crucial for the communication between th
 
 Horizon is a cloud-native solution that requires to be installed in a Kubernetes environment. It depends on the customer resource definition "Subscription" which must be registered in the Kubernetes cluster before installing Horizon components.
 
-### Subscription CRD
+### Subscription resource
 
-Subscription information is currently stored in "Subscription" custom resources which will be watched by the Horizon components.
-
-<details>
-  <summary>Subscription CRD</summary>
-
-  ```yaml
-  apiVersion: apiextensions.k8s.io/v1
-  kind: CustomResourceDefinition
-  metadata:
-    name: subscriptions.subscriber.horizon.telekom.de-
-  spec:
-    group: subscriber.horizon.telekom.de
-    names:
-      plural: subscriptions
-      singular: subscription
-      shortNames:
-        - sub
-        - subs
-      kind: Subscription
-      listKind: SubscriptionList
-    scope: Namespaced
-    versions:
-      - name: v1
-        served: true
-        storage: true
-        schema:
-          openAPIV3Schema:
-            type: object
-            properties:
-              spec:
-                type: object
-                properties:
-                  environment:
-                    type: string
-                  sseActiveOnPod:
-                    type: string
-                  subscription:
-                    type: object
-                    properties:
-                      additionalPublisherIds:
-                        type: array
-                        items:
-                          type: string
-                      appliedScopes:
-                        type: array
-                        items:
-                          type: string
-                      callback:
-                        type: string
-                      circuitBreakerOptOut:
-                        type: boolean
-                      createdAt:
-                        type: string
-                      deliveryType:
-                        type: string
-                        enum:
-                          - callback
-                          - server_sent_event
-                      enforceGetHttpRequestMethodForHealthCheck:
-                        type: boolean
-                      eventRetentionTime:
-                        type: string
-                      payloadType:
-                        type: string
-                        enum:
-                          - data
-                          - dataref
-                      publisherId:
-                        type: string
-                      publisherTrigger:
-                        type: object
-                        properties:
-                          advancedSelectionFilter:
-                            type: object
-                            x-kubernetes-preserve-unknown-fields: true
-                          responseFilter:
-                            type: array
-                            items:
-                              type: string
-                          selectionFilter:
-                            type: object
-                            additionalProperties:
-                              type: string
-                      subscriberId:
-                        type: string
-                      subscriptionId:
-                        type: string
-                      trigger:
-                        type: object
-                        properties:
-                          advancedSelectionFilter:
-                            type: object
-                            x-kubernetes-preserve-unknown-fields: true
-                          responseFilter:
-                            type: array
-                            items:
-                              type: string
-                          selectionFilter:
-                            type: object
-                            additionalProperties:
-                              type: string
-                      type:
-                        type: string
-    conversion:
-      strategy: None
-
-  ```
-</details>
+All subscription information is currently stored in "Subscription" custom resources which will be watched by the Horizon components.
+You can find the custom resource definition here: [assets/subscription.crd.yaml](https://github.com/telekom/pubsub-horizon/blob/main/assets/subscription.crd.yaml).
 
 A simple example Subscription for callback delivery would look like this:
 
 
 <details>
-  <summary>Example Subscription:</summary>
+  <summary>Example Subscription</summary>
 
   ```yaml
   apiVersion: subscriber.horizon.telekom.de/v1
@@ -347,18 +241,18 @@ A simple example Subscription for callback delivery would look like this:
   spec:
     subscription:
       callback: >-
-        https://example.consumer.service/api/v1/callback
+        https://billing-service.example.com/api/v1/callback
       deliveryType: callback
       payloadType: data
-      publisherId: devops--alpha--example-event-provider
-      subscriberId: devops--beta--pandora-smoketest-aws-subscriber-02
+      publisherId: ecommerce--shop--order-events-provider
+      subscriberId: ecommerce--billing--order-event-consumer
       subscriptionId: 4ca708e09edfb9745b1c9ceeb070aacde42cf04f
       trigger: {}
-      type: example.events.v1
-
+      type: ecommerce.shop.orders.v1
   ```
-</details>
+</details><br />
 
+If the creation, update and deletion of subscriptions is to be automated, it is advisable to install a service account with appropriate rights in the cluster namespace in advance. A corresponding example can be found here: [assets/rbac.yaml](https://github.com/telekom/pubsub-horizon/blob/main/assets/subscription.crd.yaml)
 
 ## Code of Conduct
 
