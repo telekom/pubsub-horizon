@@ -71,6 +71,11 @@ spec:
                           type: array
                           items:
                             type: string
+                        responseFilterMode:
+                          type: string
+                          enum:
+                            - INCLUDE
+                            - EXCLUDE
                         selectionFilter:
                           type: object
                           additionalProperties:
