@@ -1,0 +1,104 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: subscriptions.subscriber.horizon.telekom.de-
+spec:
+  group: subscriber.horizon.telekom.de
+  names:
+    plural: subscriptions
+    singular: subscription
+    shortNames:
+      - sub
+      - subs
+    kind: Subscription
+    listKind: SubscriptionList
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                environment:
+                  type: string
+                sseActiveOnPod:
+                  type: string
+                subscription:
+                  type: object
+                  properties:
+                    additionalPublisherIds:
+                      type: array
+                      items:
+                        type: string
+                    appliedScopes:
+                      type: array
+                      items:
+                        type: string
+                    callback:
+                      type: string
+                    circuitBreakerOptOut:
+                      type: boolean
+                    createdAt:
+                      type: string
+                    deliveryType:
+                      type: string
+                      enum:
+                        - callback
+                        - server_sent_event
+                    enforceGetHttpRequestMethodForHealthCheck:
+                      type: boolean
+                    eventRetentionTime:
+                      type: string
+                    payloadType:
+                      type: string
+                      enum:
+                        - data
+                        - dataref
+                    publisherId:
+                      type: string
+                    publisherTrigger:
+                      type: object
+                      properties:
+                        advancedSelectionFilter:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        responseFilter:
+                          type: array
+                          items:
+                            type: string
+                        responseFilterMode:
+                          type: string
+                          enum:
+                            - INCLUDE
+                            - EXCLUDE
+                        selectionFilter:
+                          type: object
+                          additionalProperties:
+                            type: string
+                    subscriberId:
+                      type: string
+                    subscriptionId:
+                      type: string
+                    trigger:
+                      type: object
+                      properties:
+                        advancedSelectionFilter:
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
+                        responseFilter:
+                          type: array
+                          items:
+                            type: string
+                        selectionFilter:
+                          type: object
+                          additionalProperties:
+                            type: string
+                    type:
+                      type: string
+  conversion:
+    strategy: None
