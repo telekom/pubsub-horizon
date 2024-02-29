@@ -224,7 +224,7 @@ Horizon is a cloud-native solution that requires to be installed in a Kubernetes
 ### Subscription resource
 
 All subscription information is currently stored in "Subscription" custom resources which will be watched by the Horizon components.
-You can find the custom resource definition here: [assets/subscription.crd.yaml](https://github.com/telekom/pubsub-horizon/blob/main/assets/subscription.crd.yaml).
+You can find the custom resource definition here: [resources/crds.yaml](https://github.com/telekom/pubsub-horizon/blob/main/resources/crds.yaml).
 
 A simple example Subscription for callback delivery would look like this:
 
@@ -252,7 +252,7 @@ A simple example Subscription for callback delivery would look like this:
   ```
 </details><br />
 
-If the creation, update and deletion of subscriptions is to be automated, it is advisable to install a service account with appropriate rights in the cluster namespace in advance. A corresponding example can be found here: [assets/rbac.yaml](https://github.com/telekom/pubsub-horizon/blob/main/assets/subscription.crd.yaml)
+If the creation, update and deletion of subscriptions is to be automated, it is advisable to install a service account with appropriate rights in the cluster namespace in advance. A corresponding example can be found here: [resources/rbac.yaml](https://github.com/telekom/pubsub-horizon/blob/main/resources/rbac.yaml)
 
 ## Code of Conduct
 
