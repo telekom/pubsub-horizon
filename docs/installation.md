@@ -9,26 +9,20 @@ Operating Horizon also requires the installation of custom resource definitions 
 
 ### Other dependencies
 
-- Kafka  
-
-    Horizon in its current form has been built around Kafka and therefore requires Kafka to be installed in the target cluster in order to run.
-- MongoDB
-
-    Horizon requires a running MongoDB instance for many operations, which is used to store metadata and track the status of events.
+- Kafka: Horizon in its current form has been built around Kafka and therefore requires Kafka to be installed in the target cluster in order to run.
+- MongoDB: Horizon requires a running MongoDB instance for many operations, which is used to store metadata and track the status of events.
 
 ## 1. Preparations
 
 ### 1.1. Installing Kafka
 
-***Note:**  
-Horizon relies only on connectivity to Kafka, but it is not necessary to install a dedicated instance for Horizon if an existing Kafka Broker can be used. If you like to use an existing instance instead which might be provided as managed service, you can skip the installation of Kafka.  
-**However**, it's important that Horizon is able to administrate new topics.*
+*Note: Horizon relies only on connectivity to Kafka, but it is not necessary to install a dedicated instance for Horizon if an existing Kafka Broker can be used. If you like to use an existing instance instead which might be provided as managed service, you can skip the installation of Kafka.  
+However, it's important that Horizon is able to administrate new topics.*
 
 ### 1.2. Installing MongoDB
 
-***Note:**   
-Similar to the installation step of Kafka, the installation of a dedicated MongoDB instance can be skipped if an existing MongoDB instance can be used, which might be provided as managed service.  
-**However**, it's important that Horizon is able to administrate new collections.*
+ *Note: Similar to the installation step of Kafka, the installation of a dedicated MongoDB instance can be skipped if an existing MongoDB instance can be used, which might be provided as managed service.  
+ However, it's important that Horizon is able to administrate new collections.*
 
 #### 1.2.1 MongoDB configuration
 
@@ -75,7 +69,7 @@ However, for the sake of simplicity, we will limit ourselves to the use of Helm 
 
 First of all, clone Horizon's [Helm Chart repository](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main) and change to the repository's directory. It will contain necessary Helm charts for installing Horizon.  
 
-All Horizon Helm charts will refer to a docker image for the respective component. Make sure that new deployments in the cluster have the rights to pull the docker images, which is not the case with many private registries. Please refer to the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials) if you need help with installing pull secrets.  
+All Horizon Helm charts refer to a docker image for the respective component. Make sure that new deployments in the cluster have the rights to pull the docker images, which is not the case with many private registries. Please refer to the [Kubernetes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials) if you need help with installing pull secrets.  
 In the following we assume, you already installed a pull secret `open-telekom-integration-platform-pull-secret` that makes it possible to pull from the registry where all necessary Horizon docker images are located.
 
 ### 2.1. Installing Horizon Starlight
@@ -83,45 +77,20 @@ In the following we assume, you already installed a pull secret `open-telekom-in
 Before installing Horizon Starlight you need to adjust the values to your needs depending on the target environment/cluster. See the following example:
 
 <details>
-  <summary>Values example</summary>
+  <summary>Starlight values example</summary>
   <br />
 
 Copy the followig to a new file `starlight-values.yaml` and adjust the values according to your needs:
 
 ```yaml
-common:
-  imagePullSecrets:
-  - name: open-telekom-integration-platform-pull-secret
-  cluster: AWS-Prod
-  team: pubsub
-  product: horizon
-  subProduct: starlight
-  domain: prod.example.domain.com
-
 image:
-  repository: registry.example.domain.com
-  organization: open-telekom-integration-platform/pubsub/horizon
-  name: starlight
   tag: 4.0.0
 
 replicas: 4
 
-rbac:
-  create: true
-
 starlight:
   features:
     schemaValidation: false
-
-commonHorizon:
-  issuerUrl: https://keycloak.example.domain.com/auth/realms/default
-  informer:
-    namespace: horizon
-  defaultEnvironment: prod
-  kafka:
-    brokers: horizon-kafka.horizon:9092
-  tracing:
-    jaegerCollectorBaseUrl: http://zipkin-collector.monitoring:9411
 
 resources:
   limits:
@@ -133,45 +102,247 @@ resources:
 
 ```
 
-Note: `starlight.features.schemaValidation` is set to `false`, since this feature is currently not part of the open source release.
+Note: `starlight.features.schemaValidation` is set to `false`, since this feature is currently not part of the open source release.  
+
+For a complete list of possible values have a look at the documentation and default `values.yaml` of the [Horizon Starlight Helm Chart](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main/horizon-starlight).
 
 </details>
 <br />
 
 ```
-helm install -f starlight-values.yaml horizon-starlight ./horizon-starlight -n horizon
+helm install -f common-values.yaml -f starlight-values.yaml horizon-starlight ./horizon-starlight -n horizon
 ```
 
 ### 2.2. Installing Horizon Galaxy
 
+Before installing Horizon Galaxy you need to adjust the values to your needs depending on the target environment/cluster. See the following example:
+
+<details>
+  <summary>Galaxy values example</summary>
+  <br />
+
+Copy the followig to a new file `galaxy-values.yaml` and adjust the values according to your needs:
+
+```yaml
+image:
+  tag: 4.0.0
+
+replicas: 8
+
+galaxy:
+  kafka:
+    consumingPartitionCount: 4
+
+  cache:
+    serviceDns: horizon-galaxy-cache-discovery-headless.horizon.svc.cluster.local
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1.5Gi
+  requests:
+    cpu: 0.5
+    memory: 200Mi
 ```
-helm install -f galaxy-values.yaml horizon-galaxy ./horizon-galaxy -n horizon
+
+For a complete list of possible values have a look at the documentation and default `values.yaml` of the [Horizon Galaxy Helm Chart](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main/horizon-galaxy).
+
+</details>
+<br />
+
+```
+helm install -f common-values.yaml -f galaxy-values.yaml horizon-galaxy ./horizon-galaxy -n horizon
 ```
 
 ### 2.3. Installing Horizon Comet
 
+Before installing Horizon Comet you need to adjust the values to your needs depending on the target environment/cluster. See the following example:
+
+<details>
+  <summary>Comet values example</summary>
+  <br />
+
+Copy the followig to a new file `comet-values.yaml` and adjust the values according to your needs:
+
+```yaml
+image:
+  tag: 4.0.0
+
+replicas: 8
+
+comet:
+  iris:
+    tokenEndpoint: https://keycloak.example.domain.com/auth/realms/<realm>/protocol/openid-connect/token
+    clientId: eventstore
+    clientSecret: changeme
+  
+  cache:
+    serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+
+  callback:
+    redeliveryThreadpoolSize: 100
+
+  kafka:
+    consumingPartitionCount: 4
+    consumerThreadpoolSize: 512
+    consumerQueueCapacity: 1024
+    maxPollRecords: 512
+
+resources:
+  limits:
+    cpu: 2
+    memory: 2Gi
+  requests:
+    cpu: 0.5
+    memory: 200Mi
+
 ```
-helm install -f comet-values.yaml horizon-comet ./horizon-comet -n horizon
+
+For a complete list of possible values have a look at the documentation and default `values.yaml` of the [Horizon Comet Helm Chart](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main/horizon-comet).
+
+</details>
+<br />
+
+
+```
+helm install -f common-values.yaml -f comet-values.yaml horizon-comet ./horizon-comet -n horizon
 ```
 
 ### 2.4. Installing Horizon Polaris
 
+Before installing Horizon Polaris you need to adjust the values to your needs depending on the target environment/cluster. See the following example:
+
+<details>
+  <summary>Polaris values example</summary>
+  <br />
+
+Copy the followig to a new file `polaris-values.yaml` and adjust the values according to your needs:
+
+```yaml
+image:
+  tag: 4.0.0
+
+replicas: 4
+
+polaris:
+  iris:
+    tokenEndpoint: https://keycloak.example.domain.com/auth/realms/<realm>/protocol/openid-connect/token
+    clientId: eventstore
+    clientSecret: changeme
+  
+  cache:
+    serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+
+  mongo:
+    url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+
+  polling:
+    batchSize: 100
+    
+resources:
+  limits:
+    cpu: 1
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 200Mi
+
 ```
-helm install -f polaris-values.yaml horizon-polaris ./horizon-polaris -n horizon
+
+For a complete list of possible values have a look at the documentation and default `values.yaml` of the [Horizon Polaris Helm Chart](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main/horizon-polaris).
+
+</details>
+<br />
+
+
+```
+helm install -f common-values.yaml -f polaris-values.yaml horizon-polaris ./horizon-polaris -n horizon
 ```
 
 ### 2.5. Installing Horizon Vortex
 
+Before installing Horizon Vortex you need to adjust the values to your needs depending on the target environment/cluster. See the following example:
+
+<details>
+  <summary>Vortex values example</summary>
+  <br />
+
+Copy the followig to a new file `vortex-values.yaml` and adjust the values according to your needs:
+
+```yaml
+image:
+  tag: 4.0.0
+
+replicas: 8
+
+kafka:
+  broker: horizon-kafka.horizon:9092
+
+mongo:
+  url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+  flushIntervalSec: 5
+
+resources:
+  limits:
+    cpu: 1.5
+    memory: 2Gi
+  requests:
+    cpu: 50m
+    memory: 200Mi
+
 ```
-helm install -f vortex-values.yaml horizon-vortex ./horizon-vortex -n horizon
+
+For a complete list of possible values have a look at the documentation and default `values.yaml` of the [Horizon Vortex Helm Chart](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main/horizon-vortex).
+
+</details>
+<br />
+
+
+
+```
+helm install -f common-values.yaml -f vortex-values.yaml horizon-vortex ./horizon-vortex -n horizon
 ```
 
 ### 2.6. Installing Horizon Pulsar
 
-*Note: Pulsar is highly dependant on Horizon Vortex. Make sure Vorttex is installed when operating Pulsar.*
+*Note: Pulsar is highly dependant on Horizon Vortex. Make sure Vorttex is installed when operating Pulsar.*  
+
+Before installing Horizon Pulsar you need to adjust the values to your needs depending on the target environment/cluster. See the following example:
+
+<details>
+  <summary>Pulsar values example</summary>
+  <br />
+
+Copy the followig to a new file `pulsar-values.yaml` and adjust the values according to your needs:
+
+```yaml
+image:
+  tag: 4.0.0
+
+replicas: 4
+
+pulsar:
+  mongo:
+    url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+
+resources:
+  limits:
+    cpu: 1
+    memory: 2Gi
+  requests:
+    cpu: 0.5
+    memory: 200Mi
 
 ```
-helm install -f pulsar-values.yaml horizon-pulsar ./horizon-pulsar -n horizon
+
+For a complete list of possible values have a look at the documentation and default `values.yaml` of the [Horizon Pulsar Helm Chart](https://github.com/telekom/pubsub-horizon-helm-charts/tree/main/horizon-pulsar).
+
+</details>
+<br />
+
+
+```
+helm install -f common-values.yaml -f pulsar-values.yaml horizon-pulsar ./horizon-pulsar -n horizon
 ```
 
 ## 3. Test

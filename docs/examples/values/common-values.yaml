@@ -1,0 +1,20 @@
+common:
+  imagePullSecrets:
+  - name: open-telekom-integration-platform-pull-secret
+  cluster: AWS-Prod
+  team: pubsub
+  domain: prod.example.domain.com
+
+image:
+  repository: registry.example.domain.com
+  organization: open-telekom-integration-platform/pubsub/horizon
+
+commonHorizon:
+  issuerUrl: https://keycloak.example.domain.com/auth/realms/default
+  informer:
+    namespace: horizon
+  defaultEnvironment: prod
+  kafka:
+    brokers: horizon-kafka.horizon:9092
+  tracing:
+    jaegerCollectorBaseUrl: http://zipkin-collector.monitoring:9411
