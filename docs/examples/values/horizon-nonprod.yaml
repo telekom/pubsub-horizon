@@ -1,0 +1,146 @@
+
+globals: &globals
+  common:
+    imagePullSecrets:
+    - name: open-telekom-integration-platform-pull-secret
+    cluster: AWS-Prod
+    team: pubsub
+    domain: prod.example.domain.com
+  commonHorizon:
+    issuerUrl: https://keycloak.example.domain.com/auth/realms/default
+    informer:
+      namespace: horizon
+    defaultEnvironment: prod
+    kafka:
+      brokers: horizon-kafka.horizon:9092
+    tracing:
+      jaegerCollectorBaseUrl: http://jaeger-collector.monitoring:9411
+  image: &image
+    repository: registry.example.domain.com
+    organization: open-telekom-integration-platform/pubsub/horizon
+
+horizon-starlight:
+  <<: *globals
+  image:
+    <<: *image
+    tag: 4.0.0
+  replicas: 2
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi
+
+horizon-galaxy:
+  <<: *globals
+  image:
+    <<: *image
+    tag: 4.0.0
+  replicas: 2
+  galaxy:
+    kafka:
+      consumingPartitionCount: 8
+    cache:
+      serviceDns: horizon-galaxy-cache-discovery-headless.horizon.svc.cluster.local
+  resources:
+    limits:
+      cpu: 1
+      memory: 1.5Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi
+
+horizon-comet:
+  <<: *globals
+  image:
+    <<: *image
+    tag: 4.0.0
+  replicas: 2
+  comet:
+    iris:
+      tokenEndpoint: https://keycloak.example.domain.com/auth/realms/<realm>/protocol/openid-connect/token
+      clientId: eventstore
+      clientSecret: changeme
+    cache:
+      serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+    callback:
+      redeliveryThreadpoolSize: 100
+    kafka:
+      consumingPartitionCount: 8
+      consumerThreadpoolSize: 512
+      consumerQueueCapacity: 1024
+      maxPollRecords: 512
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi
+
+horizon-polaris:
+  <<: *globals
+  image:
+    <<: *image
+    tag: 4.0.0
+  replicas: 1
+  polaris:
+    iris:
+      tokenEndpoint: https://keycloak.example.domain.com/auth/realms/<realm>/protocol/openid-connect/token
+      clientId: eventstore
+      clientSecret: changeme
+    cache:
+      serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+    mongo:
+      url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+    informer:
+      pods:
+        namespace: horizon
+    polling:
+      batchSize: 10
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 200Mi
+
+horizon-vortex:
+  <<: *globals
+  image:
+    <<: *image
+    tag: 4.0.0
+  replicas: 4
+  kafka:
+    broker: horizon-kafka.horizon:9092
+  mongo:
+    url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+    bulkSize: 500
+    flushIntervalSec: 5
+  resources:
+    limits:
+      cpu: 750m
+      memory: 800Mi
+    requests:
+      cpu: 50m
+      memory: 200Mi
+
+horizon-pulsar:
+  <<: *globals
+  image:
+    <<: *image
+    tag: 4.0.0
+  replicas: 2
+  pulsar:
+    mongo:
+      url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi

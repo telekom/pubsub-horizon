@@ -4,11 +4,12 @@ metadata:
   name: horizon-callback-cache-discovery-headless
   labels:
     app.kubernetes.io/name: horizon-essentials
-    app.kubernetes.io/part-of: pubsub
+    app.kubernetes.io/component: headless-service
+    app.kubernetes.io/part-of: horizon
 spec:
   selector:
-    app.kubernetes.io/part-of: pubsub
-    eni.telekom.de/component: callback
+    app.kubernetes.io/part-of: horizon
+    developer.telekom.de/pubsub/horizon/cache-contex: callback
   ports:
   - name: discovery
     port: 5701
@@ -22,11 +23,12 @@ metadata:
   name: horizon-galaxy-cache-discovery-headless
   labels:
     app.kubernetes.io/name: horizon-essentials
-    app.kubernetes.io/part-of: pubsub
+    app.kubernetes.io/component: headless-service
+    app.kubernetes.io/part-of: horizon
 spec:
   selector:
-    app.kubernetes.io/part-of: pubsub
-    app.kubernetes.io/name: horizon-galaxy
+    app.kubernetes.io/part-of: horizon
+    developer.telekom.de/pubsub/horizon/cache-contex: galaxy
   ports:
   - name: discovery
     port: 5701
