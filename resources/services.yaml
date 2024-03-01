@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     app.kubernetes.io/part-of: horizon
-    developer.telekom.de/pubsub/horizon/cache-contex: callback
+    developer.telekom.de/pubsub-horizon-cache-context: callback
   ports:
   - name: discovery
     port: 5701
@@ -28,7 +28,7 @@ metadata:
 spec:
   selector:
     app.kubernetes.io/part-of: horizon
-    developer.telekom.de/pubsub/horizon/cache-contex: galaxy
+    developer.telekom.de/pubsub-horizon-cache-context: galaxy
   ports:
   - name: discovery
     port: 5701
