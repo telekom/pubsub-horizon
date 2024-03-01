@@ -78,7 +78,16 @@ kubectl apply -f resources/services.yaml -n horizon
 
 ## 2. Preparing the images
 
-Follow the instructions in the respective repositories of the products you want to deploy. The image repositories end with -image. Make sure to make the images available to your Kubernetes cluster.
+To install Horizon, all components to be installed must first be built and dockerized. The corresponding Docker images must be made available in a Docker registry so that they can be pulled during the installation.  
+
+For information on how to build the individual components, please refer to the individual repositories of the Horizon components:
+
+- [Horizon Starlight](https://github.com/telekom/pubsub-horizon-starlight)
+- [Horizon Galaxy](https://github.com/telekom/pubsub-horizon-galaxy)
+- [Horizon Comet](https://github.com/telekom/pubsub-horizon-comet)
+- [Horizon Pulsar](https://github.com/telekom/pubsub-horizon-pulsar)
+- [Horizon Polaris](https://github.com/telekom/pubsub-horizon-polaris)
+- [Horizon Vortex](https://github.com/telekom/pubsub-horizon-vortex)
 
 ## 3. Installing Horizon
 
