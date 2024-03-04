@@ -1,28 +1,33 @@
 
-globals: &globals
-  common:
-    imagePullSecrets:
-    - name: open-telekom-integration-platform-pull-secret
-    cluster: AWS-Prod
-    team: pubsub
-    domain: prod.example.domain.com
+global: &global
+  imagePullSecrets:
+  - name: open-telekom-integration-platform-pull-secret
+
+  ingress:
+    enabled: false
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: nonprod.example.domain.com
+        paths:
+          - path: /
+            pathType: Prefix
+
   commonHorizon:
     issuerUrl: https://keycloak.example.domain.com/auth/realms/default
     informer:
       namespace: horizon
-    defaultEnvironment: prod
+    defaultEnvironment: nonprod
     kafka:
       brokers: horizon-kafka.horizon:9092
     tracing:
       jaegerCollectorBaseUrl: http://jaeger-collector.monitoring:9411
-  image: &image
-    repository: registry.example.domain.com
-    organization: open-telekom-integration-platform/pubsub/horizon
 
 horizon-starlight:
-  <<: *globals
+  <<: *global
   image:
-    <<: *image
+    repository: registry.example.domain.com/horizon/starlight
+    pullPolicy: IfNotPresent
     tag: 4.0.0
   replicas: 2
   resources:
@@ -34,9 +39,10 @@ horizon-starlight:
       memory: 200Mi
 
 horizon-galaxy:
-  <<: *globals
+  <<: *global
   image:
-    <<: *image
+    repository: registry.example.domain.com/horizon/galaxy
+    pullPolicy: IfNotPresent
     tag: 4.0.0
   replicas: 2
   galaxy:
@@ -53,9 +59,10 @@ horizon-galaxy:
       memory: 200Mi
 
 horizon-comet:
-  <<: *globals
+  <<: *global
   image:
-    <<: *image
+    repository: registry.example.domain.com/horizon/comet
+    pullPolicy: IfNotPresent
     tag: 4.0.0
   replicas: 2
   comet:
@@ -81,9 +88,10 @@ horizon-comet:
       memory: 200Mi
 
 horizon-polaris:
-  <<: *globals
+  <<: *global
   image:
-    <<: *image
+    repository: registry.example.domain.com/horizon/polaris
+    pullPolicy: IfNotPresent
     tag: 4.0.0
   replicas: 1
   polaris:
@@ -109,9 +117,10 @@ horizon-polaris:
       memory: 200Mi
 
 horizon-vortex:
-  <<: *globals
+  <<: *global
   image:
-    <<: *image
+    repository: registry.example.domain.com/horizon/vortex
+    pullPolicy: IfNotPresent
     tag: 4.0.0
   replicas: 4
   kafka:
@@ -129,9 +138,10 @@ horizon-vortex:
       memory: 200Mi
 
 horizon-pulsar:
-  <<: *globals
+  <<: *global
   image:
-    <<: *image
+    repository: registry.example.domain.com/horizon/pulsar
+    pullPolicy: IfNotPresent
     tag: 4.0.0
   replicas: 2
   pulsar:
