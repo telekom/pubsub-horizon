@@ -55,9 +55,20 @@ For more details on how to configure Kafka, we recommend checking out [Bitnami's
 ### 1.2. Installing MongoDB
 
  *Note: Similar to the installation step of Kafka, the installation of a dedicated MongoDB instance can be skipped if an existing MongoDB instance can be used, which might be provided as managed service.  
- However, it's important that Horizon is able to administrate new collections.*
+ However, it's important that Horizon is able to administrate new collections.*  
 
-*// work in progress*
+## MongoDB with Sharding
+
+You can use the following command to install the sharded MongoDB Helm chart from Bitnami with basic values, which is sufficient to run Horizon:
+
+```bash
+helm install horizon-mongodb oci://registry-1.docker.io/bitnamicharts/mongodb-sharded -n horizon --version 7.8.1
+``` 
+
+Note, that this setup is not intended to be used in production without any adjustments on the configuration.  
+
+For more details on how to configure MongoDB, we recommend checking out [Bitnami's Helm chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/mongodb-sharded) and the official [MongoDB documentation](https://www.mongodb.com/docs/manual/).
+
 
 #### 1.2.1 MongoDB configuration
 
