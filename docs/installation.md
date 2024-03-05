@@ -29,9 +29,28 @@ Even though a gateway is not absolutely necessary, we recommend the use of a gat
 ### 1.1. Installing Kafka
 
 *Note: Horizon relies only on connectivity to Kafka, but it is not necessary to install a dedicated instance for Horizon if an existing Kafka Broker can be used. If you like to use an existing instance instead which might be provided as managed service, you can skip the installation of Kafka.  
-However, it's important that Horizon is able to administrate new topics.*
+However, it's important that Horizon is able to administrate new topics.*  
 
-*// work in progress*
+You can use the following command to install the Kafka Helm chart from Bitnami with basic values, which is sufficient to run Horizon:
+
+```bash
+helm install horizon-kafka oci://registry-1.docker.io/bitnamicharts/kafka -f kafka-sample-values.yaml -n horizon --version 26.11.4
+```
+
+As example you can use the following `kafka-sample-values.yaml` file to set up Kafka. But these values are not intended to be used in production. For testing purpose we suggest to use changing the default client protocol to `PLAINTEXT` instead of `SASL_PLAINTEXT`.
+
+kafka-sample-values.yaml:
+```yaml
+listeners:  
+  client:    
+    containerPort: 9092    
+    protocol: PLAINTEXT    
+    name: CLIENT    
+    sslClientAuth: ""
+```
+
+For more details on how to configure Kafka, we recommend checking out [Bitnami's Helm chart documentation](https://github.com/bitnami/charts/tree/main/bitnami/kafka) and the official [Kafka documentation](https://docs.confluent.io/platform/current/installation/configuration/index.html).
+
 
 ### 1.2. Installing MongoDB
 
