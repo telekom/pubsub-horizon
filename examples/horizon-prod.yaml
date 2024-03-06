@@ -1,0 +1,154 @@
+global: &global
+  imagePullSecrets:
+  - name: open-telekom-integration-platform-pull-secret
+  ingress:
+    enabled: false
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - host: prod.example.domain.com
+        paths:
+          - path: /
+            pathType: Prefix
+  commonHorizon:
+    issuerUrl: https://keycloak.example.domain.com/auth/realms/default
+    informer:
+      namespace: horizon
+    defaultEnvironment: prod
+    iris: &iris
+      tokenEndpoint: https://keycloak.example.domain.com/auth/realms/<realm>/protocol/openid-connect/token
+      clientId: eventstore
+      clientSecret: changeme
+    kafka:
+      brokers: horizon-kafka.horizon:9092
+    mongo: &mongo
+      url: mongodb://user:pass@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+    tracing:
+      jaegerCollectorBaseUrl: http://jaeger-collector.monitoring:9411
+
+horizon-starlight:
+  <<: *global
+  image:
+    repository: registry.example.domain.com/horizon/horizon-starlight
+    pullPolicy: IfNotPresent
+    tag: latest
+  replicas: 4
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi
+
+horizon-galaxy:
+  <<: *global
+  image:
+    repository: registry.example.domain.com/horizon/horizon-galaxy
+    pullPolicy: IfNotPresent
+    tag: latest
+  replicas: 8
+  galaxy:
+    kafka:
+      consumingPartitionCount: 4
+    cache:
+      serviceDns: horizon-galaxy-cache-discovery-headless.horizon.svc.cluster.local
+  resources:
+    limits:
+      cpu: 1
+      memory: 1.5Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi
+
+horizon-comet:
+  <<: *global
+  image:
+    repository: registry.example.domain.com/horizon/horizon-comet
+    pullPolicy: IfNotPresent
+    tag: latest
+  replicas: 8
+  comet:
+    iris:
+      <<: *iris
+    cache:
+      serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+    callback:
+      redeliveryThreadpoolSize: 100
+    kafka:
+      consumingPartitionCount: 4
+      consumerThreadpoolSize: 512
+      consumerQueueCapacity: 1024
+      maxPollRecords: 512
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi
+
+horizon-polaris:
+  <<: *global
+  image:
+    repository: registry.example.domain.com/horizon/horizon-polaris
+    pullPolicy: IfNotPresent
+    tag: latest
+  replicas: 4
+  polaris:
+    iris:
+      <<: *iris
+    cache:
+      serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+    mongo:
+      <<: *mongo
+    informer:
+      pods:
+        namespace: horizon
+    polling:
+      batchSize: 100
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 200Mi
+
+horizon-vortex:
+  <<: *global
+  image:
+    repository: registry.example.domain.com/horizon/horizon-vortex
+    pullPolicy: IfNotPresent
+    tag: latest
+  replicas: 8
+  kafka:
+    broker: horizon-kafka.horizon:9092
+  mongo:
+    <<: *mongo
+    flushIntervalSec: 5
+  resources:
+    limits:
+      cpu: 1.5
+      memory: 2Gi
+    requests:
+      cpu: 50m
+      memory: 200Mi
+
+horizon-pulsar:
+  <<: *global
+  image:
+    repository: registry.example.domain.com/horizon/horizon-pulsar
+    pullPolicy: IfNotPresent
+    tag: latest
+  replicas: 4
+  pulsar:
+    mongo:
+      <<: *mongo
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 0.5
+      memory: 200Mi

@@ -1,0 +1,6 @@
+listeners:  
+  client:    
+    containerPort: 9092    
+    protocol: PLAINTEXT    
+    name: CLIENT    
+    sslClientAuth: ""

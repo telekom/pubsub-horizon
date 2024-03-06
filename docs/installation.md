@@ -21,7 +21,10 @@ Operating Horizon also requires the installation of custom resource definitions 
 
 Note, that Keycloak is often referred to as "Iris" within the Horizon source code or Helm Charts.  
 
+This article will also briefly explain the installation of the dependencies mentioned above.
+
 #### Gateway 
+
 Even though a gateway is not absolutely necessary, we recommend the use of a gateway. Horizon itself was designed with the idea of being addressed via a gateway. For more information, please visit the documentation if the [Open Telekom Integration Platform](https://github.com/telekom/Open-Telekom-Integration-Platform), which includes a gateway.
 
 ## 1. Preparations
@@ -72,7 +75,9 @@ For more details on how to configure MongoDB, we recommend checking out [Bitnami
 
 #### 1.2.1 MongoDB configuration
 
-First, initialize a new Horizon database collection:
+First, make sure you have [`mongosh`](https://www.mongodb.com/try/download/shell) installed, which is a shell for MongoDB. Alternatively you can also install the [MongoDB Compass GUI](https://www.mongodb.com/try/download/compass) which also comes with a shell but is also super useful for general working with MongoDB.  
+
+Then you should be able to initialize a new Horizon database collection:
 
 init-database.js:  
 ```js
@@ -82,7 +87,7 @@ db.adminCommand({
 })
 ```
 
-```
+```bash
 mongosh -u $MONGODB_ROOT_USER -p $MONGODB_ROOT_PASSWORD "mongodb://$MONGODB_HOST" --file ./init-database.js
 ```
 
@@ -220,22 +225,28 @@ In the following we assume, you already installed a pull secret `open-telekom-in
 
 To simplify things, we added another Helm chart "horizon-all" which can be used to install all Horizon components at once. In the following sections we will use this Helm chart.  
 
-You will find two different configurations in this repository. The first configuration ([docs/examples/values/horizon-nonprod.yaml](https://github.com/telekom/pubsub-horizon/blob/main/docs/examples/values/horizon-nonprod.yaml)) for the installation of Horizon (all components) with minimal scaling intended for non-production environments and for trying out Horizon for the first time. The other configuration ([docs/examples/values/horizon-prod.yaml](https://github.com/telekom/pubsub-horizon/blob/main/docs/examples/values/horizon-nonprod.yaml)) is a suggestion for a possible installation in productive environments. Both configurations differ mainly in the scaling of the individual components and the resources used.  
+You will find two different configurations in this repository. The first configuration ([examples/horizon-nonprod.yaml](https://github.com/telekom/pubsub-horizon/blob/main/examples/horizon-nonprod.yaml)) for the installation of Horizon (all components) with minimal scaling intended for non-production environments and for trying out Horizon for the first time. The other configuration ([examples/horizon-prod.yaml](https://github.com/telekom/pubsub-horizon/blob/main/examples/horizon-nonprod.yaml)) is a suggestion for a possible installation in productive environments. Both configurations differ mainly in the scaling of the individual components and the resources used.  
 
-In this installation guide, we will focus on installing a Horizon instance with minimal scaling so that you can try out Horizon quickly and without any special hardware requirements.  
+In this article, we will focus on installing a Horizon instance with minimal scaling so that you can try out Horizon quickly and without any special hardware requirements.  
 
 Before installing Horizon you will need to adjust the default values to your needs depending on the target environment/cluster.
-The following fields in particular should be changed for an error-free installation:
+The following fields in particular usually need to be changed for an error-free installation:
 
-- `globals.common.domain`
-- `globals.commonHorizon.issuerUrl`
-- `globals.image.repository`
-- `globals.image.organization`
+- `global.imagePullSecrets`
+- `global.ingress.hosts`
+- `global.commonHorizon.issuerUrl`
+- `global.commonHorizon.iris.tokenEndpoint`
+- `global.commonHorizon.iris.clientSecret`
+- `global.commonHorizon.mongo.url`
 
-Note, that `globals.image.organization` refers to the base path of the docker image registry URL, while `globals.image.repository` refers to the registry's hostname. The field `globals.common.domain` is being used for any ingresses that can be installed (horizon-starlight, horizon-pulsar, etc.). You can keep a dummy value here if no Ingresses are planned to be installed (default).
+You can keep the dummy value for the host (`global.ingress.hosts`) if no Ingresses are planned to be installed (default).
+
+Additionally you should set the correct image repository for each sub-product image:
+
+- `<sub-product>.image.repository`
 
 ```
-helm install -f horizon-nonprod.yaml horizon ./horizon-all -n horizon
+helm upgrade -i -n horizon -f horizon-nonprod.yaml horizon ./horizon-all
 ```
 
 ## 4. Test
