@@ -1,4 +1,6 @@
 global: &global
+  affinity:
+    podAntiAffinity: {}
   imagePullSecrets:
   - name: open-telekom-integration-platform-pull-secret
   ingress:
@@ -22,7 +24,7 @@ global: &global
     kafka:
       brokers: horizon-kafka.horizon:9092
     mongo: &mongo
-      url: mongodb://root:topsecret@horizon-mongodb-sharded.horizon.svc.cluster.local:27017
+      url: mongodb://root:topsecret@horizon-mongodb-mongodb-sharded.horizon.svc.cluster.local:27017
     tracing:
       jaegerCollectorBaseUrl: http://jaeger-collector.monitoring:9411
 

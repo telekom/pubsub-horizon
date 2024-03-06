@@ -44,7 +44,7 @@ By following this quickstarter guide line by line, you will obtain an running in
 
 5. Initialize a new Kubernetes cluster
     ```powershell
-    k3d cluster create horizon-playground
+    k3d cluster create horizon-playground -p "8080:80@loadbalancer" --agents 2
     ```
 
 6. Create a new kubeconfig file for the new cluster
@@ -123,12 +123,12 @@ kubectl apply -f .\pubsub-horizon\resources\services.yaml -n horizon
 
 1. Build all Horizon images (this can take a few minutes)
     ```powershell
-    docker build -t horizon-starlight:latest -f .\pubsub-horizon-starlight\Build.Dockerfile .\pubsub-horizon-starlight
-    docker build -t horizon-galaxy:latest -f .\pubsub-horizon-galaxy\Build.Dockerfile .\pubsub-horizon-galaxy
-    docker build -t horizon-comet:latest -f .\pubsub-horizon-comet\Build.Dockerfile .\pubsub-horizon-comet
-    docker build -t horizon-polaris:latest -f .\pubsub-horizon-polaris\Build.Dockerfile .\pubsub-horizon-polaris
+    docker build -t horizon-starlight:latest -f .\pubsub-horizon-starlight\Dockerfile.multi-stage .\pubsub-horizon-starlight
+    docker build -t horizon-galaxy:latest -f .\pubsub-horizon-galaxy\Dockerfile.multi-stage .\pubsub-horizon-galaxy
+    docker build -t horizon-comet:latest -f .\pubsub-horizon-comet\Dockerfile.multi-stage .\pubsub-horizon-comet
+    docker build -t horizon-polaris:latest -f .\pubsub-horizon-polaris\Dockerfile.multi-stage .\pubsub-horizon-polaris
     docker build -t horizon-vortex:latest -f .\pubsub-horizon-vortex\Dockerfile .\pubsub-horizon-vortex
-    docker build -t horizon-pulsar:latest -f .\pubsub-horizon-pulsar\Build.Dockerfile .\pubsub-horizon-pulsar
+    docker build -t horizon-pulsar:latest -f .\pubsub-horizon-pulsar\Dockerfile.multi-stage .\pubsub-horizon-pulsar
     ```
 
 2. Import the images into the Kubernetes cluster (this can take a few minutes):
