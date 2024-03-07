@@ -44,7 +44,7 @@ By following this quickstarter guide line by line, you will obtain an running in
 
 5. Initialize a new Kubernetes cluster
     ```powershell
-    k3d cluster create horizon-playground -p "8080:80@loadbalancer" --agents 2
+    k3d cluster create horizon-playground -p "443:443@loadbalancer" -p "80:80@loadbalancer" --agents 2
     ```
 
 6. Create a new kubeconfig file for the new cluster
@@ -57,7 +57,41 @@ By following this quickstarter guide line by line, you will obtain an running in
     $env:KUBECONFIG = "$env:userprofile\horizon-playground.kubeconfig"
     ```
 
-8. Create a new "horizon" namespace in the cluster:
+8. Install an ingress dns for resolving ingress URLs within the cluster
+    ```powershell
+    kubectl apply -f https://raw.githubusercontent.com/talss89/kube-ingress-dns/main/manifest/ingress-dns.yaml
+    kubectl apply -f .\pubsub-horizon\resources\ingress-dns.yaml
+    ```
+
+9. Edit the `coredns` ConfigMap
+
+    Run the following
+
+    ```powershell
+    kubectl edit configmap coredns -n kube-system
+    ```
+
+    Add the following and save the file:
+    ```
+    test:53 {
+        errors
+        cache 30
+        forward . <Cluster IP of kube-ingress-dns service>
+    }
+    ```
+
+    *Note, you can find the correct Cluster IP easily by running:*
+    
+    ```powershell
+    kubectl get -n kube-system service/kube-ingress-dns -o jsonpath="{.spec.clusterIP}"
+    ```
+10. Restart the `coredns` deployment
+
+    ```powershell
+    kubectl rollout restart deployment coredns -n kube-system
+    ```
+
+11. Create a new "horizon" namespace in the cluster:
     ```powershell
     kubectl create namespace horizon
     ```
@@ -70,9 +104,9 @@ By following this quickstarter guide line by line, you will obtain an running in
 
     Verify ready status of Kafka
     ```powershell
-    kubectl get sts -n horizon
+    while (1) {kubectl get sts horizon-kafka-controller -n horizon; sleep 5}
     ```
-    *Repeat the command until ready. This can take a few minutes.*
+    *The command above will be executed every 5 seconds. It can take a few minutes until Kafka is ready.*
 
 2. Install MongoDB in the cluster
     ```powershell
@@ -81,9 +115,9 @@ By following this quickstarter guide line by line, you will obtain an running in
 
     Verify ready status of MongoDB
     ```powershell
-    kubectl get sts -n horizon
+    while (1) {kubectl get sts -l app.kubernetes.io/name=mongodb-sharded -n horizon; sleep 5}
     ```
-    *Repeat the command until ready. This can take a few minutes.*
+    *The command above will be executed every 5 seconds. It can take a few minutes until MongoDB is ready.*
 
 ## Database configuration
 
@@ -109,7 +143,6 @@ By following this quickstarter guide line by line, you will obtain an running in
 2. Install required ServiceMonitor CRD
     ```powershell
     kubectl apply -f https://raw.githubusercontent.com/prometheus-community/helm-charts/main/charts/kube-prometheus-stack/charts/crds/crds/crd-servicemonitors.yaml
- 
     ```
 
 ## Headless services installation
@@ -248,7 +281,7 @@ kubectl apply -f .\pubsub-horizon\resources\services.yaml -n horizon
 
 1. Create a new `horizon-nonprod-customized.yaml` file where the secret for  "eventstore" client is properly set to the value configured in the step before:
     ```powershell
-    yq '.global.commonHorizon.iris.clientSecret = \"N25V3loiXgc8USBmoX0AVXmnb3gIs0N6\"' .\pubsub-horizon\examples\horizon-nonprod.yaml > horizon-nonprod-customized.yaml
+    yq '.global.commonHorizon.iris.clientSecret = \"default=N25V3loiXgc8USBmoX0AVXmnb3gIs0N6\"' .\pubsub-horizon\examples\horizon-nonprod.yaml > horizon-nonprod-customized.yaml
     ```
 
 2. Install Horizon
