@@ -5,7 +5,7 @@ This guide describes how to install Horizon using `k3d`. It is intended for deve
 If you do not know what k3d is, please refer to the [k3d documentation](https://k3d.io/).  
 By following this quickstarter guide line by line, you will obtain an running instance of Horizon that you can use to try out the software.
 
-*This guide has been written for and tested with k3d version v5.6.0, k3s version v1.27.4-k3s1, kubernetes version v1.27.4, and Helm version v3.14.1 on Microsoft Windows 10 (x64) with Docker Desktop version 4.28.0.*
+>*This guide has been written for and tested with k3d version v5.6.0, k3s version v1.27.4-k3s1, kubernetes version v1.27.4, and Helm version v3.14.1 on Microsoft Windows 10 (x64) with Docker Desktop version 4.28.0.*
 
 ## Prepare the environment
 
@@ -47,7 +47,7 @@ By following this quickstarter guide line by line, you will obtain an running in
 
 For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which will install by using [`k3d`](https://k3d.io/).  
 
-*If you already prepared a Kubernetes cluster by following the [Open Telekom Integration Platform on minikube](https://github.com/telekom/Open-Telekom-Integration-Platform/wiki/Installation-on-Minikube) guide, you can skip this section and jump directly to [Install Horizon](#install-horizon).*
+>*If you already prepared a Kubernetes cluster by following the [Open Telekom Integration Platform on minikube](https://github.com/telekom/Open-Telekom-Integration-Platform/wiki/Installation-on-Minikube) guide, you can skip this section and jump directly to [Install Horizon](#install-horizon).*
 
 * Initialize a new Kubernetes cluster:
     ```powershell
@@ -70,7 +70,7 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     kubectl apply -f .\pubsub-horizon\resources\ingress-dns.yaml
     ```
 
-    *Special thanks to [Tom Lawton](https://github.com/talss89) who created this rewrite of minikube-ingress-dns which works with any Kubernetes cluster.*
+    >*Special thanks to [Tom Lawton](https://github.com/talss89) who created this rewrite of minikube-ingress-dns which works with any Kubernetes cluster.*
 
 * Edit the `coredns` ConfigMap:
 
@@ -89,7 +89,7 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     }
     ```
 
-    *Note, you can find the correct Cluster IP easily by running:*
+    *You can find the correct Cluster IP easily by running:*
     
     ```powershell
     kubectl get -n kube-system service/kube-ingress-dns -o jsonpath="{.spec.clusterIP}"
@@ -118,7 +118,7 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     ```powershell
     while (1) {kubectl get sts horizon-kafka-controller -n platform; sleep 5}
     ```
-    *The command above will be executed every 5 seconds. It can take a few minutes until Kafka is ready.*
+    >*The command above will be executed every 5 seconds. It can take a few minutes until Kafka is ready.*
 
 * Install MongoDB:
     ```powershell
@@ -129,7 +129,7 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     ```powershell
     while (1) {kubectl get sts -l app.kubernetes.io/name=mongodb-sharded -n platform; sleep 5}
     ```
-    *The command above will be executed every 5 seconds. It can take a few minutes until MongoDB is ready.*
+    >*The command above will be executed every 5 seconds. It can take a few minutes until MongoDB is ready.*
 
 ### Configure the database
 
@@ -138,7 +138,7 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     Start-Process kubectl -ArgumentList "port-forward -n platform service/horizon-mongodb-mongodb-sharded 27017:27017"
     ```
 
-    *Note: A new terminal will popup. Do not close it unless you want to terminate the port-forwarding. Let's continue in the original Poershell terminal*
+    >*Note: A new terminal will popup. Do not close it unless you want to terminate the port-forwarding. Let's continue in the original Poershell terminal*
 
     
 * Initialize the database and create required indices:
@@ -217,6 +217,13 @@ If you have not yet installed an identity provider in the cluster, you can do so
     ```powershell
     helm upgrade -i -n platform f .\identity-iris-keycloak-charts\values.local.yaml iris .\identity-iris-keycloak-charts\
     ```
+
+* Add a new entry to your `C:\Windows\System32\Drivers\etc\hosts` file, so that the IDP can be accessed from the host system:  
+    ```text
+    127.0.0.1 iris.test
+    ```
+    > ***Note:** This needs administrative rights.*
+
 </details>
 
 #### Configuration
@@ -343,7 +350,7 @@ If you have not yet installed an identity provider in the cluster, you can do so
 
 ### Prerequisites
 
-* Install [Insomnium](https://github.com/ArchGPT/insomnium), a privacy-focused open-source tool for test APIs:
+* Install [Insomnium](https://github.com/ArchGPT/insomnium), a privacy-focused open-source tool for testing APIs:
     ```powershell
     scoop bucket add extras
     scoop install extras/insomnium
