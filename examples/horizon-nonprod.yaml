@@ -15,16 +15,16 @@ global: &global
   commonHorizon:
     issuerUrl: https://iris.test/auth/realms/default
     informer:
-      namespace: horizon
+      namespace: platform
     defaultEnvironment: nonprod
     iris: &iris
       tokenEndpoint: https://iris.test/auth/realms/<realm>/protocol/openid-connect/token
       clientId: eventstore
       clientSecret: changeme
     kafka:
-      brokers: horizon-kafka.horizon:9092
+      brokers: horizon-kafka.platform:9092
     mongo: &mongo
-      url: mongodb://root:topsecret@horizon-mongodb-mongodb-sharded.horizon.svc.cluster.local:27017
+      url: mongodb://root:topsecret@horizon-mongodb-mongodb-sharded.platform.svc.cluster.local:27017
     tracing:
       jaegerCollectorBaseUrl: http://jaeger-collector.monitoring:9411
 
@@ -54,7 +54,7 @@ horizon-galaxy:
     kafka:
       consumingPartitionCount: 8
     cache:
-      serviceDns: horizon-galaxy-cache-discovery-headless.horizon.svc.cluster.local
+      serviceDns: horizon-galaxy-cache-discovery-headless.platform.svc.cluster.local
   resources:
     limits:
       cpu: 1
@@ -74,7 +74,7 @@ horizon-comet:
     iris:
       <<: *iris
     cache:
-      serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+      serviceDNS: horizon-callback-cache-discovery-headless.platform.svc.cluster.local
     callback:
       redeliveryThreadpoolSize: 100
     kafka:
@@ -101,7 +101,7 @@ horizon-polaris:
     iris:
       <<: *iris
     cache:
-      serviceDNS: horizon-callback-cache-discovery-headless.horizon.svc.cluster.local
+      serviceDNS: horizon-callback-cache-discovery-headless.platform.svc.cluster.local
     mongo:
       <<: *mongo
     informer:
@@ -125,7 +125,7 @@ horizon-vortex:
     tag: latest
   replicas: 4
   kafka:
-    broker: horizon-kafka.horizon:9092
+    broker: horizon-kafka.platform:9092
   mongo:
     <<: *mongo
     bulkSize: 500

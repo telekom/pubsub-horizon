@@ -338,3 +338,76 @@ If you have not yet installed an identity provider in the cluster, you can do so
     ```powershell
     helm upgrade -i -n platform -f .\horizon-nonprod.yaml horizon .\pubsub-horizon-helm-charts\horizon-all
     ```
+
+## Try it out
+
+### Prerequisites
+
+* Install [Insomnium](https://github.com/ArchGPT/insomnium), a privacy-focused open-source tool for test APIs:
+    ```powershell
+    scoop bucket add extras
+    scoop install extras/insomnium
+    ```
+
+* Clone Cosmoparrot echo service:
+    ```powershell
+    git clone https://github.com/telekom/pubsub-horizon-cosmoparrot.git
+    ```
+* Build the Cosmoparrot image:
+    ```powershell
+    docker build -t cosmoparrot:latest -f .\pubsub-horizon-cosmoparrot\Dockerfile .\pubsub-horizon-cosmoparrot
+    ```
+* Import the Cosmoparrot image into the cluster:
+    ```powershell
+    k3d image import docker.io/library/cosmoparrot:latest -c horizon-playground
+    ```
+* Install Cosmoparrot:
+    ```powershell
+    kubectl apply -f .\pubsub-horizon-cosmoparrot\manifest\deployment.yaml -n platform
+    ```
+* Port-forward Horizon Starlight:
+    ```powershell
+    Start-Process kubectl -ArgumentList "port-forward -n platform service/horizon-starlight 8080:8080"
+    ```
+
+### Create a callback subscription
+
+* Apply the example subscription:
+    ```powershell
+    kubectl apply -f .\pubsub-horizon\examples\example-subscription.yaml -n platform
+    ```
+### Make a request
+
+1. Start Insomnium
+2. Create a new `POST` HTTP request for the URL `http://localhost:8081/v1/nonprod/events`
+3. Set `OAuth 2` as auth type.
+4. Set `Client Credentials` as grant type.
+5. Set "eventstore" as client ID.
+6. Set "N25V3loiXgc8USBmoX0AVXmnb3gIs0N6" as client secret.
+7. Add the following JSON body:
+    ```json
+    {
+    "id":"b5882acc-e40e-47c4-b767-079d310f1ec0",
+    "source":"http://apihost/some/path/resource/1234",
+    "specversion":"1.0",
+    "type":"test.event.v1",
+    "datacontenttype":"application/json",
+    "dataref":"http://apihost/some/api/v1/resource/1234",
+    "data":{
+        "message":"Hello world!"
+    },
+    "dataschema":"http://apihost/schema/definition.json"
+    }
+    ```
+
+    *Make sure to use a new UUID for the `id` field (=event ID) everytime yo make a request.*
+
+    > Tip: You can use the internal `UUID` (v4) function of Insomnium to generate a proper UUID for the `id` field. 
+8. Execute the request, you should see a `201` HTTP response code
+
+### Verify event has been received
+
+* Verify the callback request reached the event consumer by viewing the logs of Cosmoparrot:
+    ```powershell
+    kubectl logs -l app=cosmoparrot -n platform
+    ```
