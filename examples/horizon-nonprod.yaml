@@ -106,7 +106,7 @@ horizon-polaris:
       <<: *mongo
     informer:
       pods:
-        namespace: horizon
+        namespace: platform
     polling:
       batchSize: 10
   resources:

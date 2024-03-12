@@ -1,15 +1,14 @@
 apiVersion: subscriber.horizon.telekom.de/v1
 kind: Subscription
 metadata:
-  name: 4ca708e09edfb9745b1c9ceeb070aacde42cf02f
-  namespace: platform
+  name: 4ca708e09edfb9745b1c9ceeb070aacde42cf02d
 spec:
   subscription:
-    callback: http://cosmoparrot.platform/callback
+    callback: http://cosmoparrot.platform:8080/callback
     deliveryType: callback
     payloadType: data
-    publisherId: eventstore
-    subscriberId: eventstore
-    subscriptionId: 4ca708e09edfb9745b1c9ceeb070aacde42cf02f
+    publisherId: ecommerce--billing--order-processing
+    subscriberId: ecommerce--billing--order-processing
+    subscriptionId: 4ca708e09edfb9745b1c9ceeb070aacde42cf02d
     trigger: {}
-    type: test.event.v1
+    type: orders.v1
