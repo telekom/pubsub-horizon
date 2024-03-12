@@ -1,5 +1,12 @@
 # Installing Horizon
 
+## Preface
+
+This article describes more generally how Horizon can be installed and operated in a Kubernetes environment. It serves less as a step-by-step guide.  
+
+If you want to get started right away, we recommend visting: [Local installation (Quickstart)](https://github.com/telekom/pubsub-horizon/blob/main/docs/quickstart.md).  
+By following the instructions there, you can very quickly create a non-production environment locally on your system in which Horizon can be tested. 
+
 ## Prerequisites
 
 ### Kubernetes
@@ -248,7 +255,3 @@ Additionally you should set the correct image repository for each sub-product im
 ```
 helm upgrade -i -n horizon -f horizon-nonprod.yaml horizon ./horizon-all
 ```
-
-## 4. Test
-
-*// work in progress*

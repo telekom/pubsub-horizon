@@ -254,6 +254,13 @@ A simple example Subscription for callback delivery would look like this:
 
 If the creation, update and deletion of subscriptions is to be automated, it is advisable to install a service account with appropriate rights in the cluster namespace in advance. A corresponding example can be found here: [resources/rbac.yaml](https://github.com/telekom/pubsub-horizon/blob/main/resources/rbac.yaml)
 
+
+## Getting started
+
+If you want to learn more about how to install and run Horizon in a Kubernetes environment in general, visit: [Installing Horizon](https://github.com/telekom/pubsub-horizon/blob/main/docs/installation.md)  
+But if you want to get started right away with a non-productive local environment and try out Horizon, we recommend visting: [Local installation (Quickstart)](https://github.com/telekom/pubsub-horizon/blob/main/docs/quickstart.md). 
+
+
 ## Code of Conduct
 
 This project has adopted the [Contributor Covenant](https://www.contributor-covenant.org/) in version 2.1 as our code of conduct. Please see the details in our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). All contributors must abide by the code of conduct.

@@ -9,6 +9,20 @@ By following this quickstarter guide line by line, you will obtain an running in
 
 >*This guide has been written for and tested with k3d version v5.6.0, k3s version v1.27.4-k3s1, kubernetes version v1.27.4, and Helm version v3.14.1 on Microsoft Windows 10 (x64) with Docker Desktop version 4.28.0.*
 
+
+## System requirements
+
+* Microsoft Windows 10 (x64) or later
+* Docker Desktop installed
+* At least 6 GB free RAM recommended
+
+    If needed, limit the memory usage of Docker Desktop when creating/adjusting the `%USERPROFILE%/.wsl2config`:
+    ```
+    [wsl2]
+    memory=6GB
+    ````
+
+
 ## Prepare the environment
 
 * Install `scoop` CLI package manager:  
