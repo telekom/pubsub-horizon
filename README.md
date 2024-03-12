@@ -224,7 +224,7 @@ Horizon is a cloud-native solution that requires to be installed in a Kubernetes
 ### Subscription resource
 
 All subscription information is currently stored in "Subscription" custom resources which will be watched by the Horizon components.
-You can find the custom resource definition here: [resources/crds.yaml](https://github.com/telekom/pubsub-horizon/blob/main/resources/crds.yaml).
+You can find the custom resource definition here: [resources/crds.yaml](./resources/crds.yaml).
 
 A simple example Subscription for callback delivery would look like this:
 
@@ -252,13 +252,13 @@ A simple example Subscription for callback delivery would look like this:
   ```
 </details><br />
 
-If the creation, update and deletion of subscriptions is to be automated, it is advisable to install a service account with appropriate rights in the cluster namespace in advance. A corresponding example can be found here: [resources/rbac.yaml](https://github.com/telekom/pubsub-horizon/blob/main/resources/rbac.yaml)
+If the creation, update and deletion of subscriptions is to be automated, it is advisable to install a service account with appropriate rights in the cluster namespace in advance. A corresponding example can be found here: [resources/rbac.yaml](./resources/rbac.yaml)
 
 
 ## Getting started
 
-If you want to learn more about how to install and run Horizon in a Kubernetes environment in general, visit: [Installing Horizon](https://github.com/telekom/pubsub-horizon/blob/main/docs/installation.md)  
-But if you want to get started right away with a non-productive local environment and try out Horizon, we recommend visting: [Local installation (Quickstart)](https://github.com/telekom/pubsub-horizon/blob/main/docs/quickstart.md). 
+If you want to learn more about how to install and run Horizon in a Kubernetes environment in general, visit: [Installing Horizon](./docs/installation.md)  
+But if you want to get started right away with a non-productive local environment and try out Horizon, we recommend visting: [Local installation (Quickstart)](./docs/quickstart.md). 
 
 
 ## Code of Conduct
