@@ -3,7 +3,7 @@ The drawing provides an overview of the overall architecture of Horizon and show
 
 *Please note that the boxes marked with "Hazelcast" do not show different cache instances, but belong together - i.e. they refer to the same cache instance. The separation into several boxes in the graphic is for clarity.*  
 
-![Architecture](./imgs/Horizon-Architecture-Detail.webp)
+![Architecture](./img/Horizon-Architecture-Detail.webp)
 
 *For more detailed flow charts of the individual components/processes, please refer to the documentation of the corresponding sub-component of Horizon.*
 

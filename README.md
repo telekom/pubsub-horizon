@@ -4,9 +4,14 @@ SPDX-FileCopyrightText: 2024 Deutsche Telekom AG
 SPDX-License-Identifier: CC0-1.0    
 -->
 
-# Horizon
+<p align="center">
+  <img src="docs/img/Horizon.svg" alt="Horizon logo" width="200">
+  <h1 align="center">Horizon</h1>
+</p>
 
-A cloud intermediary which handles the asynchronous communication between systems through well-defined messages ('events).
+<p align="center">
+  A cloud intermediary which handles the asynchronous communication between systems through well-defined event messages.
+</p>
 
 ## About
 
@@ -94,7 +99,7 @@ Horizon requires the following infrastructure components in order to operate cor
 
 ## Architecture
 The diagram below shows the general flow and interfaces between the most important components of Horizon.
-# ![Architecture](./docs/imgs/Horizon-Architecture-Simple.webp)
+# ![Architecture](./docs/img/Horizon-Architecture-Simple.webp)
 Customer endpoints are provided by [Starlight](https://github.com/telekom/pubsub-horizon-galaxy-starlight), 
 [Pulsar](https://github.com/telekom/pubsub-horizon-galaxy-pulsar)
 and 
