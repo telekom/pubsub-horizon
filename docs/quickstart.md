@@ -459,12 +459,14 @@ In this example, we will keep it simple, which is why the event provider is also
 ### Send an event
 
 1. Start Insomnium
-2. Create a new `POST` HTTP request for the URL `http://localhost:8080/v1/nonprod/events`
-3. Set `OAuth 2` as auth type.
-4. Set `Client Credentials` as grant type.
-5. Set "ecommerce--billing--order-processing" as client ID.
-6. Set "75DdRxQpcWUMKpAajw5OmSW8U3CnXg2p" as client secret.
-7. Add the following JSON body:
+   > **Important:** Make sure to disable certificate validation in Insomnium during this test, since the CA certificate used for https://iris.test is still a self-signed one. You can do so by navigating to `Application -> Preferences` and untick the option "Validate certificates during authentication".
+3. Create a new `POST` HTTP request for the URL `http://localhost:8080/v1/nonprod/events`
+4. Set `OAuth 2` as auth type.
+6. Set `Client Credentials` as grant type.
+7. For the access token URL use: https://iris.test/auth/realms/default/protocol/openid-connect/token
+8. Set "ecommerce--billing--order-processing" as client ID.
+9. Set "75DdRxQpcWUMKpAajw5OmSW8U3CnXg2p" as client secret.
+10. Add the following JSON body:
     ```json
     {
     "id":"b5882acc-e40e-47c4-b767-079d310f1ec0",
@@ -484,7 +486,7 @@ In this example, we will keep it simple, which is why the event provider is also
 
     > **Tip:** You can use the internal `UUID` (v4) function of Insomnium to generate a proper UUID for the `id` field. 
 
-8. Execute the request, you should see a `201` HTTP response code
+11. Execute the request, you should see a `201` HTTP response code
 
 ### Verify event has been received
 
