@@ -109,7 +109,7 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     }
     ```
 
-    You easily prepare such a configuration by running the following Powershell commands, which also sets the correct custer IP of the Ingress DNS service:
+    You can easily prepare such a configuration by running the following Powershell commands, which will also set the correct cluster IP of the Ingress DNS:
 
     ```powershell
     $clusterIP = kubectl get -n kube-system service/kube-ingress-dns -o jsonpath="{.spec.clusterIP}"
