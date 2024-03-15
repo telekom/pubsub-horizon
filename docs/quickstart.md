@@ -1,3 +1,9 @@
+<!--
+Copyright 2024 Deutsche Telekom IT GmbH
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Local installation (Quickstart)
 
 This guide describes how to install Horizon using `k3d`/`k3s`. It is intended for development and testing purposes only.

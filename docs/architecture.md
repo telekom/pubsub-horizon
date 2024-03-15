@@ -1,3 +1,9 @@
+<!--
+Copyright 2024 Deutsche Telekom IT GmbH
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # System architecture
 The image below shows the entire system architecture of Horizon.
 The graphic should be read starting at the entry points (Starlight, Pulsar, Voyager) and moving to the right. This way you can follow the high-level flow of each service.  
