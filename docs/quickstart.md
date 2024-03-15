@@ -96,15 +96,11 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
 
     >*Special thanks to [Tom Lawton](https://github.com/talss89) who created this rewrite of minikube-ingress-dns which works with any Kubernetes cluster.*
 
-* Edit the `coredns` ConfigMap:
+* Customize the CoreDNS configuration:
 
-    Run the following
-
-    ```powershell
-    kubectl edit configmap coredns -n kube-system
-    ```
-
-    Add the following configuration and save the file:
+    In order to point CoreDNS to our Ingress DNS for resolving any request with *.test host, we must [customize the CoreDNS configuration](https://docs.digitalocean.com/products/kubernetes/how-to/customize-coredns/).  
+    
+    Basically, it is sufficient to add a similar entry as follows:
     ```
     test:53 {
         errors
@@ -113,15 +109,26 @@ For this guide we will use a [`k3s`](https://k3s.io/) Kubernetes cluster which w
     }
     ```
 
-    *You can find the correct Cluster IP easily by running:*
-    
-    ```powershell
-    kubectl get -n kube-system service/kube-ingress-dns -o jsonpath="{.spec.clusterIP}"
-    ```
-* Restart the `coredns` deployment:
+    You can easily prepare such a configuration by running the following Powershell commands, which will also set the correct cluster IP of the Ingress DNS:
 
     ```powershell
-    kubectl rollout restart deployment coredns -n kube-system
+    $clusterIP = kubectl get -n kube-system service/kube-ingress-dns -o jsonpath="{.spec.clusterIP}"
+    $yamlFile = ".\examples\coredns-custom.yaml"
+    $yamlContent = Get-Content $yamlFile
+    $yamlContent -replace "<Cluster IP of kube-ingress-dns service>", $clusterIP | Set-Content $yamlFile
+
+    ```
+
+    Finally, install the custom CoreDNS configuration:
+    
+    ```powershell
+    kubectl apply -f .\examples\coredns-custom.yaml -n kube-system
+    ```
+
+    After that the CoreDNS should reload itself. You can verify it by using the following command:
+
+    ```powershell
+    kubectl logs -n kube-system -l k8s-app=kube-dns
     ```
 
 * Create a new "platform" namespace in the cluster:
