@@ -13,6 +13,12 @@ SPDX-License-Identifier: CC0-1.0
   A cloud intermediary which handles the asynchronous communication between systems through well-defined event messages.
 </p>
 
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#horizon-ecosystem"> Horizon ecosystemt</a> •
+  <a href="#getting-started">Getting started</a>
+</p>
+
 ## About
 
 Horizon is an event-driven communication platform implementing the publish–subscribe messaging pattern designed to facilitate real-time data exchange and interaction between different components within distributed systems. 
