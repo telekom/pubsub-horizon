@@ -10,7 +10,7 @@ SPDX-License-Identifier: Apache-2.0
 
 This article describes more generally how Horizon can be installed and operated in a Kubernetes environment. It serves less as a step-by-step guide.  
 
-If you want to get started right away, we recommend visting: [Local installation (Quickstart)](https://github.com/telekom/pubsub-horizon/blob/main/docs/quickstart.md).  
+If you want to get started right away, we recommend visting: [Local installation (Quickstart)](../docs/quickstart.md).  
 By following the instructions there, you can very quickly create a non-production environment locally on your system in which Horizon can be tested. 
 
 ## Prerequisites
@@ -238,7 +238,7 @@ In the following we assume, you already installed a pull secret `open-telekom-in
 
 To simplify things, we added another Helm chart "horizon-all" which can be used to install all Horizon components at once. In the following sections we will use this Helm chart.  
 
-You will find two different configurations in this repository. The first configuration ([examples/horizon-nonprod.yaml](https://github.com/telekom/pubsub-horizon/blob/main/examples/horizon-nonprod.yaml)) for the installation of Horizon (all components) with minimal scaling intended for non-production environments and for trying out Horizon for the first time. The other configuration ([examples/horizon-prod.yaml](https://github.com/telekom/pubsub-horizon/blob/main/examples/horizon-nonprod.yaml)) is a suggestion for a possible installation in productive environments. Both configurations differ mainly in the scaling of the individual components and the resources used.  
+You will find two different configurations in this repository. The first configuration ([examples/horizon-nonprod.yaml](../examples/horizon-nonprod.yaml)) for the installation of Horizon (all components) with minimal scaling intended for non-production environments and for trying out Horizon for the first time. The other configuration ([examples/horizon-prod.yaml](../examples/horizon-nonprod.yaml)) is a suggestion for a possible installation in productive environments. Both configurations differ mainly in the scaling of the individual components and the resources used.  
 
 In this article, we will focus on installing a Horizon instance with minimal scaling so that you can try out Horizon quickly and without any special hardware requirements.  
 

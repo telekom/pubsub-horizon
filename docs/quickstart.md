@@ -445,7 +445,7 @@ If you have not yet installed an identity provider in the cluster, you can do so
 Just like before, you must first create a new client, but this time not for internal systems, but for the event provider and event consumer.  
 In this example, we will keep it simple, which is why the event provider is also the event consumer - so you will only need to create one client.
 
-* Create a new client within the "default" realm with the name "ecommerce--billing--order-processing". You can easily import [examples/example-client.json](https://github.com/telekom/pubsub-horizon/blob/docs/installation/examples/example-client.json) for this step. It also contains a password that we will use later.
+* Create a new client within the "default" realm with the name "ecommerce--billing--order-processing". You can easily import [examples/example-client.json](../examples/example-client.json) for this step. It also contains a password that we will use later.
 
 ### Create a callback subscription
 
