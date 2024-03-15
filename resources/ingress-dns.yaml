@@ -1,0 +1,26 @@
+# Copyright 2024 Deutsche Telekom IT GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-ingress-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: 'true'
+    kubernetes.io/name: kube-ingress-dns
+spec:
+  ports:
+    - name: dns
+      protocol: UDP
+      port: 53
+      targetPort: 53
+    - name: dns-tcp
+      protocol: TCP
+      port: 53
+      targetPort: 53
+  selector:
+    app: kube-ingress-dns
+  type: ClusterIP

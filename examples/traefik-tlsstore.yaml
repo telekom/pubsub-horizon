@@ -1,0 +1,11 @@
+# Copyright 2024 Deutsche Telekom IT GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+spec:
+  defaultCertificate:
+    secretName: tls-secret

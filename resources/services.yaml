@@ -1,0 +1,41 @@
+# Copyright 2024 Deutsche Telekom IT GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: horizon-callback-cache-discovery-headless
+  labels:
+    app.kubernetes.io/name: horizon-essentials
+    app.kubernetes.io/component: headless-service
+    app.kubernetes.io/part-of: horizon
+spec:
+  selector:
+    app.kubernetes.io/part-of: horizon
+    developer.telekom.de/pubsub-horizon-cache-context: callback
+  ports:
+  - name: discovery
+    port: 5701
+    protocol: TCP
+  publishNotReadyAddresses: true
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: horizon-galaxy-cache-discovery-headless
+  labels:
+    app.kubernetes.io/name: horizon-essentials
+    app.kubernetes.io/component: headless-service
+    app.kubernetes.io/part-of: horizon
+spec:
+  selector:
+    app.kubernetes.io/part-of: horizon
+    developer.telekom.de/pubsub-horizon-cache-context: galaxy
+  ports:
+  - name: discovery
+    port: 5701
+    protocol: TCP
+  publishNotReadyAddresses: true
+  clusterIP: None

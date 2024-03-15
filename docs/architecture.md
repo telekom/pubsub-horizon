@@ -1,3 +1,9 @@
+<!--
+Copyright 2024 Deutsche Telekom IT GmbH
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # System architecture
 The drawing provides an overview of the overall architecture of Horizon and shows how the individual components interact with each other, which should help to understand the high-level flow of Horizon and components.  
 

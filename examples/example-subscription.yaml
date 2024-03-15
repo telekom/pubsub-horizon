@@ -1,0 +1,18 @@
+# Copyright 2024 Deutsche Telekom IT GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: subscriber.horizon.telekom.de/v1
+kind: Subscription
+metadata:
+  name: 4ca708e09edfb9745b1c9ceeb070aacde42cf02d
+spec:
+  subscription:
+    callback: http://cosmoparrot.platform:8080/callback
+    deliveryType: callback
+    payloadType: data
+    publisherId: ecommerce--billing--order-processing
+    subscriberId: ecommerce--billing--order-processing
+    subscriptionId: 4ca708e09edfb9745b1c9ceeb070aacde42cf02d
+    trigger: {}
+    type: orders.v1
