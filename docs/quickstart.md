@@ -8,7 +8,9 @@ SPDX-License-Identifier: Apache-2.0
 
 This guide describes how to install Horizon using `k3d`/`k3s`. It is intended for development and testing purposes only.
 
-> **Warning:** Do not use it for installation on productive environments!  
+> **Warning:** Do not use it for installation on productive environments!
+
+> **Important:** This guide uses non-productive example passwords for simplification, please change them accordingly!
 
 If you do not know what k3d is, please refer to the [k3d documentation](https://k3d.io/).  
 By following this quickstarter guide line by line, you will obtain an running instance of Horizon that you can use to try out the software.
