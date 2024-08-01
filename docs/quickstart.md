@@ -6,6 +6,20 @@ SPDX-License-Identifier: Apache-2.0
 
 # Local installation (Quickstart)
 
+> ### We are currently working on an updated version of our documentation.
+>
+>**Please refer to the following tags in the meantime**
+> 
+>| Component                                                        | Version                                                                         |
+>|------------------------------------------------------------------|---------------------------------------------------------------------------------|
+>| [Starlight](https://github.com/telekom/pubsub-horizon-starlight) | [4.0.1](https://github.com/telekom/pubsub-horizon-starlight/releases/tag/4.0.1) |
+>| [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy)       | [4.0.2](https://github.com/telekom/pubsub-horizon-galaxy/releases/tag/4.0.2)    |
+>| [Comet](https://github.com/telekom/pubsub-horizon-comet)         | [4.0.1](https://github.com/telekom/pubsub-horizon-comet/releases/tag/4.0.1)     |
+>| [Polaris](https://github.com/telekom/pubsub-horizon-polaris)     | [4.0.3](https://github.com/telekom/pubsub-horizon-polaris/releases/tag/4.0.3)   |
+>| [Vortex](https://github.com/telekom/pubsub-horizon-vortex)       | [1.4.2](https://github.com/telekom/pubsub-horizon-vortex/releases/tag/1.4.2)    |
+>| [Pulsar](https://github.com/telekom/pubsub-horizon-pulsar)       | [4.0.0](https://github.com/telekom/pubsub-horizon-pulsar/releases/tag/4.0.0)    |
+
+
 This guide describes how to install Horizon using `k3d`/`k3s`. It is intended for development and testing purposes only.
 
 > **Warning:** Do not use it for installation on productive environments!
