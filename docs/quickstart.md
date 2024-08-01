@@ -59,12 +59,12 @@ By following this quickstarter guide line by line, you will obtain an running in
     ```powershell
     git clone https://github.com/telekom/pubsub-horizon.git
     git clone https://github.com/telekom/pubsub-horizon-helm-charts.git
-    git clone https://github.com/telekom/pubsub-horizon-starlight.git
-    git clone https://github.com/telekom/pubsub-horizon-galaxy.git
-    git clone https://github.com/telekom/pubsub-horizon-comet.git
-    git clone https://github.com/telekom/pubsub-horizon-polaris.git
-    git clone https://github.com/telekom/pubsub-horizon-vortex.git
-    git clone https://github.com/telekom/pubsub-horizon-pulsar.git
+    git clone https://github.com/telekom/pubsub-horizon-starlight.git --branch 4.0.1
+    git clone https://github.com/telekom/pubsub-horizon-galaxy.git --branch 4.0.2
+    git clone https://github.com/telekom/pubsub-horizon-comet.git --branch 4.0.1
+    git clone https://github.com/telekom/pubsub-horizon-polaris.git --branch 4.0.3
+    git clone https://github.com/telekom/pubsub-horizon-vortex.git --branch 1.4.2
+    git clone https://github.com/telekom/pubsub-horizon-pulsar.git --branch 4.0.0
 
     ```
 
