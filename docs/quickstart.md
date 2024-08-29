@@ -293,12 +293,12 @@ If you have not yet installed an identity provider in the cluster, you can do so
 
 * Build the image:
     ```powershell
-    docker build -t iris:latest -f .\identity-iris-keycloak-image\Dockerfile.multi-stage .\identity-iris-keycloak-image
+    docker build -t iris_keycloak:latest -f .\identity-iris-keycloak-image\Dockerfile.multi-stage .\identity-iris-keycloak-image
     ```
 
 * Import the image into the cluster:
     ```powershell
-    k3d image import docker.io/library/iris:latest -c horizon-playground
+    k3d image import docker.io/library/iris_keycloak:latest -c horizon-playground
     ```
 
 * Required for k3d/k3s: Set the StorageClass name to "local-path":
