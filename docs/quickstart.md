@@ -428,7 +428,7 @@ If you have not yet installed an identity provider in the cluster, you can do so
 
 2. Install Horizon
     ```powershell
-    helm upgrade -i -n platform -f .\horizon-nonprod.yaml horizon oci://ghcr.io/telekom/o28m-charts/horizon-all --version 1.0.0-ci-semantic-release
+    helm upgrade -i -n platform -f .\horizon-nonprod.yaml horizon oci://ghcr.io/telekom/o28m-charts/horizon-all --version 1.0.0
     ```
 
 ## Try it out
