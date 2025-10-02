@@ -15,7 +15,7 @@ SPDX-License-Identifier: CC0-1.0
 
 <p align="center">
   <a href="#features">Features</a> •
-  <a href="#horizon-ecosystem"> Horizon ecosystemt</a> •
+  <a href="#horizon-ecosystem"> Horizon ecosystem</a> •
   <a href="#getting-started">Getting started</a>
 </p>
 
@@ -24,7 +24,7 @@ SPDX-License-Identifier: CC0-1.0
 Horizon is an event-driven communication platform implementing the publish–subscribe messaging pattern designed to facilitate real-time data exchange and interaction between different components within distributed systems. 
 It acts as a central hub for managing event publication, delivery and monitoring, providing a reliable and scalable infrastructure for building event-driven architectures.  
 
-### Lose coupled design
+### Loosely coupled design
 At its core, Horizon enables seamless communication between various microservices, applications, and systems by decoupling producers and consumers through the use of events. 
 It allows producers to publish events without needing to know who will consume them, and consumers to subscribe to specific event types they are interested in without needing to know where those events originated.
 
@@ -46,7 +46,7 @@ Horizon allows event providers to publish events by simply calling an API. There
 <br />
 <details>
 <summary><strong>Powerful message filtering</strong></summary>  
-Horizon's message filtering capabilities are a hybrid of topic-based and contend-based. Published events are processed and delivered to consumers based on the subscriptions to the corresponding event types. Optionally, consumers can declare simple or more complex filtering rules for customizing what data or parts of the data should be delivered to them based on the contents of the event message.   
+Horizon's message filtering capabilities are a hybrid of topic-based and content-based. Published events are processed and delivered to consumers based on the subscriptions to the corresponding event types. Optionally, consumers can declare simple or more complex filtering rules for customizing what data or parts of the data should be delivered to them based on the contents of the event message.   
 In addition, event providers can define scopes for their data for fine-grained control over what subscribers are allowed to see. 
 </details>
 <br />
@@ -101,7 +101,7 @@ Horizon requires the following infrastructure components in order to operate cor
 - Janus*: User interface to check customer endpoints for a valid GET/HEAD response.
 
 
-**Note, that these optional components are not required in order to deploy and operate Horizon and their source code is currently not publicly available. Depending on our capacity we will be probably working on their open source release among other tools/helpers that might be useful when operating Horizon.*
+> **\*Note that these optional components are not required in order to deploy and operate Horizon and their source code is currently not publicly available. Depending on our capacity we will probably be working on their open source release among other tools/helpers that might be useful when operating Horizon.**
 
 ## Architecture
 The diagram below shows the general flow and interfaces between the most important components of Horizon.
@@ -115,11 +115,11 @@ The Vortex component ensures that for every message store in the broker a corres
 
 ### Workflow
 
-To publish an event, an eligible publisher has to send a HTTP Post request to Starlight's endpoint. Starlight will validate and publish the event message to the underlying message broker whereupon it will be read and processed by [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy-galaxy).
+To publish an event, an eligible publisher has to send a HTTP Post request to Starlight's endpoint. Starlight will validate and publish the event message to the underlying message broker after which it will be read and processed by [Galaxy](https://github.com/telekom/pubsub-horizon-galaxy-galaxy).
 Galaxy will de-multiplex the event message for each subscriber and applies existing filters. [Comet](https://github.com/telekom/pubsub-horizon-galaxy-comet) then takes over and sends the processed event message to the corresponding subscriber over HTTP. 
 
 To fetch an event via the Server-Sent-Events standard (SSE), an eligible subscriber has to send a request to Pulsar's SSE endpoint. 
-Pulsar will validate the request, spot & pick all undelivered event messages from Kafka and return it to the subscriber.
+Pulsar will validate the request, identify & retrieve all undelivered event messages from Kafka and return it to the subscriber.
 If one or more new events are available within one minute, Pulsar will forward these event messages to the subscriber until there are no more event messages for one minute.
 
 In order to query the status for an event or redeliver it, an eligible subscriber has to send a HTTP request to Voyager's endpoint. When requesting the redelivery of an event, Voyager picks the event message from the Kafka, resets its status in Horizon meta data store (MongoDB) and republishes it, so that either Comet or Pulsar will redeliver the event to the consumer depending on the chosen delivery type (callback or SSE).
@@ -127,7 +127,7 @@ In order to query the status for an event or redeliver it, an eligible subscribe
 If you are interested in a more detailed system architecture, click [here](./docs/architecture.md).
 
 ## Model
-Horizon internally uses a model that is crucial for the communication between the Horizon components. These models are:
+Horizon internally uses models that are crucial for the communication between the Horizon components. These models are:
 - [Subscription](https://github.com/telekom/pubsub-horizon-spring-parent/blob/main/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/kubernetes/resource/Subscription.java): Represents a subscription of a subscriber to a specific event type. This subscription is used to filter and deliver event messages to the subscriber.
 - [PublishedEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/blob/main/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/PublishedEventMessage.java): Represents an event message that is published by a publisher.
 - [SubscriptionEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/blob/main/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/SubscriptionEventMessage.java): Represents an event message that is multiplexed from a [PublishedEventMessage](https://github.com/telekom/pubsub-horizon-spring-parent/blob/main/horizon-core/src/main/java/de/telekom/eni/pandora/horizon/model/event/PublishedEventMessage.java) by Galaxy for each subscriber.
